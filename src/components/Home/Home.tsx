@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { IJobAnalysisRequest, IAnalysisState } from '../../types';
+import type { IJobAnalysisRequest, IAnalysisState } from '@/types';
 import styles from './Home.module.scss';
 
 function Home() {
