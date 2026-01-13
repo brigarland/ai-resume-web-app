@@ -1,0 +1,8 @@
+@import "./variables.scss";
+
+@mixin card {
+  background: $bg-white;
+  border-radius: 12px;
+  box-shadow: $shadow-md;
+  padding: 2rem;
+}
