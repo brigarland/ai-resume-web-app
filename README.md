@@ -44,7 +44,6 @@ This portfolio project demonstrates:
 ai-resume-analyzer/
 ├── src/
 │   ├── components/       # React components (future)
-│   ├── data/            # Resume and stories data
 │   ├── styles/          # SCSS modules
 │   ├── types/           # TypeScript type definitions
 │   ├── utils/           # Utility functions
@@ -52,6 +51,7 @@ ai-resume-analyzer/
 │   └── main.tsx         # React entry point
 ├── api/
 │   └── analyze.ts       # Vercel serverless function
+│   ├── lib/             # Resume and stories data
 ├── public/              # Static assets
 └── dist/                # Build output (gitignored)
 ```
@@ -66,7 +66,7 @@ ai-resume-analyzer/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/ai-resume-analyzer.git
+   git clone https://github.com/brigarland/ai-resume-web-app.git
    cd ai-resume-analyzer
    ```
 
@@ -77,7 +77,7 @@ ai-resume-analyzer/
 
 3. **Set up environment variables**
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    # Edit .env and add your ANTHROPIC_API_KEY
    ```
 
@@ -95,8 +95,8 @@ ai-resume-analyzer/
 
 Edit these files to add your information:
 
-- **`src/data/stories.ts`**: Add your personal stories and experiences
-- **`src/data/stories.ts`**: Update the `resumeData` object with your resume
+- **`src/api.lib/stories.ts`**: Add your personal stories and experiences
+- **`src/api/lib/stories.ts`**: Update the `resumeData` object with your resume
 
 ## Deployment
 
@@ -156,4 +156,4 @@ MIT License - feel free to use this as a template for your own projects.
 
 **Brian Garland**
 - Portfolio: [brigarland.com](https://brigarland.com)
-- GitHub: [@yourusername](https://github.com/brigarland)
+- GitHub: [@brigarland](https://github.com/brigarland)
