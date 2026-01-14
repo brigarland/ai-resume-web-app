@@ -1,5 +1,6 @@
-@import "../../styles/variables.scss";
-@import "../../styles/mixins.scss";
+@use "sass:color";
+@use "@/styles/variables.scss" as *;
+@use "@/styles/mixins.scss" as *;
 
 .app {
   min-height: 100vh;
@@ -114,7 +115,7 @@
   background: rgba($error-color, 0.1);
   border-left: 4px solid $error-color;
   border-radius: 4px;
-  color: darken($error-color, 10%);
+  color: color.adjust($error-color, $lightness: -10%);
 }
 
 .results {

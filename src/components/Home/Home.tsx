@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { apiUrl } from '@/constants';
 import type { IJobAnalysisRequest, IAnalysisState } from '@/types';
 import styles from './Home.module.scss';
 
@@ -18,7 +19,7 @@ function Home() {
     setAnalysisState({ status: 'loading', data: null, error: null });
 
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(`${apiUrl}/api/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

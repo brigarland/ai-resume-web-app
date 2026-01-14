@@ -1,4 +1,4 @@
-import type { IStory } from '@/types';
+import type { IStory, IResumeData } from './types';
 
 /**
  * Personal stories that demonstrate competencies beyond the resume.
@@ -25,7 +25,6 @@ export const stories: IStory[] = [
     ],
     categories: ['communication', 'education', 'public-speaking']
   },
-  // TODO: Add more stories
   {
     id: 'story-002',
     title: 'Example Technical Project',
@@ -40,7 +39,7 @@ export const stories: IStory[] = [
  * Resume content - structured for AI consumption
  * TODO: Replace with actual resume data
  */
-export const resumeData = {
+export const resumeData: IResumeData = {
   fullText: `
     [Your full resume text here - this will be cached by Claude]
     
@@ -60,12 +59,7 @@ export const resumeData = {
     'TypeScript',
     'AI Integration',
     'Rapid Prototyping'
-    // TODO: Add real skills
   ],
-  experience: [
-    // TODO: Add structured experience data
-  ],
-  education: [
-    // TODO: Add education data
-  ]
+  experience: [],
+  education: []
 };
