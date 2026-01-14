@@ -43,8 +43,9 @@ This portfolio project demonstrates:
 ```
 ai-resume-analyzer/
 ├── src/
-│   ├── components/       # React components (future)
-│   ├── styles/          # SCSS modules
+│   ├── components/      # React components
+│   ├── constants/       # Constants, Enums, etc
+│   ├── styles/          # Shared SCSS elements
 │   ├── types/           # TypeScript type definitions
 │   ├── utils/           # Utility functions
 │   ├── App.tsx          # Main app component
