@@ -20,12 +20,36 @@
     $color-brand-primary-hover 100%
   );
   color: $color-neutral-background-1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.headshot {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid $color-neutral-background-1;
+  object-fit: cover;
+  box-shadow: $shadow-8;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  text-align: left;
 }
 
 .headerTitle {
   color: $color-neutral-background-1;
-  margin-bottom: $spacing-sm;
+  margin: 0;
 }
 
 .subtitle {
@@ -143,6 +167,21 @@
 @media (max-width: 768px) {
   .header {
     padding: $spacing-xl $spacing-md;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .headerText {
+    text-align: center;
+    align-items: center;
+  }
+
+  .headshot {
+    width: 64px;
+    height: 64px;
   }
 
   .main {
