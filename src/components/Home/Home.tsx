@@ -1,14 +1,40 @@
-import { useState } from 'react';
-import { apiUrl } from '@/constants';
-import type { IJobAnalysisRequest, IAnalysisState } from '@/types';
-import styles from './Home.module.scss';
+import { useState } from "react";
+import {
+  FluentProvider,
+  webLightTheme,
+  Card,
+  CardHeader,
+  Input,
+  Button,
+  Text,
+  Title1,
+  Title2,
+  Title3,
+  Body1,
+  Caption1,
+  Badge,
+  MessageBar,
+  MessageBarBody,
+  Spinner,
+  tokens,
+} from "@fluentui/react-components";
+import {
+  ChartMultiple24Regular,
+  Checkmark24Regular,
+  Warning24Regular,
+  Book24Regular,
+  Link24Regular,
+} from "@fluentui/react-icons";
+import { apiUrl } from "@/constants/env";
+import type { IJobAnalysisRequest, IAnalysisState } from "@/types";
+import styles from "./Home.module.scss";
 
 function Home() {
-  const [jobUrl, setJobUrl] = useState('');
+  const [jobUrl, setJobUrl] = useState("");
   const [analysisState, setAnalysisState] = useState<IAnalysisState>({
-    status: 'idle',
+    status: "idle",
     data: null,
-    error: null
+    error: null,
   });
 
   const handleAnalyze = async () => {
@@ -16,135 +42,191 @@ function Home() {
       return;
     }
 
-    setAnalysisState({ status: 'loading', data: null, error: null });
+    setAnalysisState({ status: "loading", data: null, error: null });
 
     try {
       const response = await fetch(`${apiUrl}/api/analyze`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ jobUrl } as IJobAnalysisRequest)
+        body: JSON.stringify({ jobUrl } as IJobAnalysisRequest),
       });
 
       if (!response.ok) {
-        throw new Error('Analysis failed');
+        throw new Error("Analysis failed");
       }
 
       const data = await response.json();
-      setAnalysisState({ status: 'complete', data, error: null });
+      setAnalysisState({ status: "complete", data, error: null });
     } catch (error) {
       setAnalysisState({
-        status: 'error',
+        status: "error",
         data: null,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     }
   };
 
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <h1>AI Resume Analyzer</h1>
-        <p className={styles.subtitle}>
-          Powered by Claude • Analyze job fit with AI-driven insights
-        </p>
-      </header>
+    <FluentProvider theme={webLightTheme}>
+      <div className={styles.app}>
+        <header className={styles.header}>
+          <Title1 className={styles.headerTitle}>AI Resume Analyzer</Title1>
+          <Text className={styles.subtitle}>
+            Powered by Claude • Analyze job fit with AI-driven insights
+          </Text>
+        </header>
 
-      <main className={styles.main}>
-        <div className={styles.analyzerCard}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="job-url">Job Posting URL</label>
-            <input
-              id="job-url"
-              type="url"
-              placeholder="https://apply.careers.microsoft.com/..."
-              value={jobUrl}
-              onChange={(e) => setJobUrl(e.target.value)}
-              disabled={analysisState.status === 'loading'}
+        <main className={styles.main}>
+          <Card className={styles.analyzerCard}>
+            <CardHeader
+              header={<Title3>Enter Job Posting</Title3>}
+              description={
+                <Caption1>
+                  Paste the URL of a job posting to analyze your fit
+                </Caption1>
+              }
             />
-          </div>
 
-          <button
-            onClick={handleAnalyze}
-            disabled={!jobUrl.trim() || analysisState.status === 'loading'}
-            className={styles.analyzeButton}
-          >
-            {analysisState.status === 'loading' ? 'Analyzing...' : 'Analyze Job Fit'}
-          </button>
-
-          {analysisState.status === 'error' && (
-            <div className={styles.error}>
-              <strong>Error:</strong> {analysisState.error}
+            <div className={styles.inputGroup}>
+              <Text className={styles.inputLabel}>Job Posting URL</Text>
+              <Input
+                type="url"
+                placeholder="https://apply.careers.microsoft.com/..."
+                value={jobUrl}
+                onChange={(_, data) => setJobUrl(data.value)}
+                disabled={analysisState.status === "loading"}
+                contentBefore={<Link24Regular />}
+                size="large"
+                style={{ width: "100%" }}
+              />
             </div>
-          )}
 
-          {analysisState.status === 'complete' && analysisState.data && (
+            <Button
+              appearance="primary"
+              size="large"
+              onClick={handleAnalyze}
+              disabled={!jobUrl.trim() || analysisState.status === "loading"}
+              icon={
+                analysisState.status === "loading" ? (
+                  <Spinner size="tiny" />
+                ) : (
+                  <ChartMultiple24Regular />
+                )
+              }
+              style={{ width: "100%" }}
+            >
+              {analysisState.status === "loading"
+                ? "Analyzing..."
+                : "Analyze Job Fit"}
+            </Button>
+
+            {analysisState.status === "error" && (
+              <MessageBar intent="error" style={{ marginTop: "24px" }}>
+                <MessageBarBody>
+                  <strong>Error:</strong> {analysisState.error}
+                </MessageBarBody>
+              </MessageBar>
+            )}
+          </Card>
+
+          {analysisState.status === "complete" && analysisState.data && (
             <div className={styles.results}>
-              <div className={styles.matchScore}>
-                <h2>Match Score</h2>
-                <div className={styles.score}>{analysisState.data.matchScore}%</div>
-              </div>
+              <Card className={styles.matchScoreCard}>
+                <Title2 className={styles.matchScoreTitle}>Match Score</Title2>
+                <div className={styles.score}>
+                  {analysisState.data.matchScore}%
+                </div>
+              </Card>
 
-              <div className={styles.section}>
-                <h3>Strengths</h3>
-                <ul>
+              <Card className={styles.section}>
+                <div className={styles.sectionTitle}>
+                  <Checkmark24Regular
+                    color={tokens.colorPaletteGreenForeground1}
+                  />
+                  <Title3>Strengths</Title3>
+                </div>
+                <ul className={styles.list}>
                   {analysisState.data.strengths.map((strength, i) => (
-                    <li key={i}>{strength}</li>
+                    <li key={i} className={styles.listItem}>
+                      <Body1>{strength}</Body1>
+                    </li>
                   ))}
                 </ul>
-              </div>
+              </Card>
 
               {analysisState.data.gaps.length > 0 && (
-                <div className={styles.section}>
-                  <h3>Growth Areas</h3>
-                  <ul>
+                <Card className={styles.section}>
+                  <div className={styles.sectionTitle}>
+                    <Warning24Regular
+                      color={tokens.colorPaletteYellowForeground2}
+                    />
+                    <Title3>Growth Areas</Title3>
+                  </div>
+                  <ul className={styles.list}>
                     {analysisState.data.gaps.map((gap, i) => (
-                      <li key={i}>{gap}</li>
+                      <li key={i} className={styles.listItem}>
+                        <Body1>{gap}</Body1>
+                      </li>
                     ))}
                   </ul>
-                </div>
+                </Card>
               )}
 
               {analysisState.data.relevantStories.length > 0 && (
                 <div className={styles.section}>
-                  <h3>Relevant Experience Stories</h3>
+                  <div className={styles.sectionTitle}>
+                    <Book24Regular color={tokens.colorBrandForeground1} />
+                    <Title3>Relevant Experience Stories</Title3>
+                  </div>
                   {analysisState.data.relevantStories.map((story) => (
-                    <div key={story.id} className={styles.story}>
-                      <h4>{story.title}</h4>
-                      <p>{story.context}</p>
+                    <Card key={story.id} className={styles.storyCard}>
+                      <CardHeader
+                        header={<Title3>{story.title}</Title3>}
+                        description={<Body1>{story.context}</Body1>}
+                      />
                       <div className={styles.storySkills}>
                         {story.skills.map((skill, i) => (
-                          <span key={i} className={styles.skillTag}>{skill}</span>
+                          <Badge
+                            key={i}
+                            appearance="outline"
+                            color="informative"
+                          >
+                            {skill}
+                          </Badge>
                         ))}
                       </div>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               )}
 
-              <div className={`${styles.section} ${styles.recommendation}`}>
-                <h3>Recommendation</h3>
-                <p>{analysisState.data.recommendation}</p>
-              </div>
+              <Card className={styles.recommendationCard}>
+                <CardHeader header={<Title3>Recommendation</Title3>} />
+                <Body1>{analysisState.data.recommendation}</Body1>
+              </Card>
             </div>
           )}
-        </div>
-      </main>
+        </main>
 
-      <footer className={styles.footer}>
-        <p>
-          Built by Brian Garland • Portfolio project demonstrating AI integration
-        </p>
-        <a
-          href="https://github.com/yourusername/ai-resume-analyzer"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View on GitHub
-        </a>
-      </footer>
-    </div>
+        <footer className={styles.footer}>
+          <Caption1>
+            Built by Brian Garland • Portfolio project demonstrating AI
+            integration
+          </Caption1>
+          <br />
+          <a
+            href="https://github.com/brigarland/ai-resume-analyzer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            View on GitHub
+          </a>
+        </footer>
+      </div>
+    </FluentProvider>
   );
 }
 

@@ -1,267 +1,155 @@
-@use "sass:color";
 @use "@/styles/variables.scss" as *;
-@use "@/styles/mixins.scss" as *;
+
+/**
+ * Home Component Styles
+ * All styles consolidated here - no need for separate .ts file
+ */
 
 .app {
   min-height: 100vh;
-  background: $bg-light;
+  background-color: $color-neutral-background-2;
   display: flex;
   flex-direction: column;
 }
 
 .header {
+  padding: $spacing-xxl $spacing-lg;
+  background: linear-gradient(
+    135deg,
+    $color-brand-primary 0%,
+    $color-brand-primary-hover 100%
+  );
+  color: $color-neutral-background-1;
   text-align: center;
-  padding: 3rem 1rem 2rem;
-  background: linear-gradient(135deg, $primary-color 0%, #1e40af 100%);
-  color: white;
+}
 
-  h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.025em;
-  }
+.headerTitle {
+  color: $color-neutral-background-1;
+  margin-bottom: $spacing-sm;
 }
 
 .subtitle {
-  margin: 0.5rem 0 0;
-  font-size: 1.125rem;
-  opacity: 0.9;
-  font-weight: 300;
+  color: rgba($color-neutral-background-1, 0.9);
+  font-size: 16px;
 }
 
 .main {
   flex: 1;
-  max-width: 900px;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: $spacing-xl $spacing-lg;
 }
 
 .analyzerCard {
-  @include card;
+  margin-bottom: $spacing-lg;
 }
 
 .inputGroup {
-  margin-bottom: 1.5rem;
-
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: $text-primary;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-  }
-
-  input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid $border-color;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.2s;
-
-    &:focus {
-      outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
-    }
-
-    &:disabled {
-      background-color: $bg-light;
-      cursor: not-allowed;
-    }
-
-    &::placeholder {
-      color: $text-secondary;
-    }
-  }
+  margin-bottom: $spacing-lg;
 }
 
-.analyzeButton {
-  width: 100%;
-  padding: 1rem;
-  background: $primary-color;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover:not(:disabled) {
-    background: $primary-hover;
-    transform: translateY(-1px);
-    box-shadow: $shadow-lg;
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    background: $text-secondary;
-    cursor: not-allowed;
-    transform: none;
-  }
-}
-
-.error {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: rgba($error-color, 0.1);
-  border-left: 4px solid $error-color;
-  border-radius: 4px;
-  color: color.adjust($error-color, $lightness: -10%);
+.inputLabel {
+  display: block;
+  margin-bottom: $spacing-sm;
+  font-weight: $font-weight-semibold;
 }
 
 .results {
-  margin-top: 2rem;
-  animation: fadeIn 0.3s ease-in;
+  margin-top: $spacing-xl;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.matchScore {
+// Match Score Card - uses success colors
+.matchScoreCard {
+  background: linear-gradient(
+    135deg,
+    $color-success 0%,
+    $color-success-dark 100%
+  );
+  color: $color-neutral-background-1;
   text-align: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, $success-color 0%, #059669 100%);
-  color: white;
-  border-radius: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: $spacing-lg;
+  padding: $spacing-xl;
+  border-radius: $border-radius-lg;
+}
 
-  h2 {
-    margin: 0 0 1rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
+.matchScoreTitle {
+  color: $color-neutral-background-1;
+  margin-bottom: $spacing-md;
 }
 
 .score {
-  font-size: 4rem;
-  font-weight: 700;
+  font-size: 64px;
+  font-weight: $font-weight-bold;
   line-height: 1;
+  color: $color-neutral-background-1;
 }
 
 .section {
-  margin-bottom: 2rem;
-
-  h3 {
-    margin: 0 0 1rem;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: $text-primary;
-  }
-
-  ul {
-    margin: 0;
-    padding-left: 1.5rem;
-
-    li {
-      margin-bottom: 0.5rem;
-      color: $text-secondary;
-      line-height: 1.6;
-    }
-  }
+  margin-bottom: $spacing-lg;
 }
 
-.story {
-  padding: 1.5rem;
-  background: $bg-light;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+.sectionTitle {
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
 
-  h4 {
-    margin: 0 0 0.75rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: $text-primary;
-  }
+.list {
+  margin: 0;
+  padding-left: $spacing-lg;
+}
 
-  p {
-    margin: 0 0 1rem;
-    color: $text-secondary;
-    line-height: 1.6;
-  }
+.listItem {
+  margin-bottom: $spacing-sm;
+  line-height: 1.6;
+}
+
+.storyCard {
+  margin-bottom: $spacing-md;
 }
 
 .storySkills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
 }
 
-.skillTag {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: white;
-  border: 1px solid $border-color;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  color: $text-secondary;
-  font-weight: 500;
-}
-
-.recommendation {
-  padding: 1.5rem;
-  background: rgba($primary-color, 0.05);
-  border-left: 4px solid $primary-color;
-  border-radius: 8px;
-
-  p {
-    margin: 0;
-    color: $text-primary;
-    line-height: 1.7;
-    font-size: 1.0625rem;
-  }
+.recommendationCard {
+  background-color: $color-brand-background;
 }
 
 .footer {
   text-align: center;
-  padding: 2rem 1rem;
-  background: white;
-  border-top: 1px solid $border-color;
+  padding: $spacing-xl $spacing-lg;
+  background-color: $color-neutral-background-1;
+  border-top: 1px solid $color-neutral-stroke;
   margin-top: auto;
+}
 
-  p {
-    margin: 0 0 0.5rem;
-    color: $text-secondary;
-    font-size: 0.875rem;
-  }
+.footerLink {
+  color: $color-brand-primary;
+  text-decoration: none;
+  font-weight: $font-weight-semibold;
 
-  a {
-    color: $primary-color;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.875rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
   }
 }
 
 // Responsive
-@media (max-width: 640px) {
-  .header h1 {
-    font-size: 2rem;
+@media (max-width: 768px) {
+  .header {
+    padding: $spacing-xl $spacing-md;
+  }
+
+  .main {
+    padding: $spacing-lg $spacing-md;
   }
 
   .score {
-    font-size: 3rem;
+    font-size: 48px;
   }
 }
