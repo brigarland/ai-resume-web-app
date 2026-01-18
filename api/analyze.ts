@@ -1,52 +1,50 @@
 /**
  * Vercel Serverless Function: Job Analysis
- * 
+ * Runtime: Node.js 20.x via @vercel/node@3.2.21
+ *
  * This function:
  * 1. Fetches the job posting content
  * 2. Uses Claude to analyze job fit against resume + stories
  * 3. Returns structured analysis with match score, strengths, gaps, and relevant stories
  */
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import Anthropic from '@anthropic-ai/sdk';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import Anthropic from "@anthropic-ai/sdk";
 
 // Import resume and stories (in production, these would be in a database)
-import { stories, resumeData } from './lib/data.js';
-import type { IJobAnalysisRequest, IJobAnalysisResponse } from './lib/types.js';
+import { stories, resumeData } from "./lib/data";
+import type { IJobAnalysisRequest, IJobAnalysisResponse } from "./lib/types";
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
+  apiKey: process.env.ANTHROPIC_API_KEY || "",
 });
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Add CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
   res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
   );
 
   // Handle preflight OPTIONS request
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
   // Only allow POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const { jobUrl } = req.body as IJobAnalysisRequest;
 
     if (!jobUrl) {
-      return res.status(400).json({ error: 'Job URL is required' });
+      return res.status(400).json({ error: "Job URL is required" });
     }
 
     // TODO: Fetch job posting content
@@ -91,33 +89,32 @@ Please analyze this candidate's fit for the role and provide your assessment in 
 
     // Call Claude API
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
       system: systemPrompt,
       messages: [
         {
-          role: 'user',
+          role: "user",
           content: userPrompt,
         },
       ],
     });
 
     // Parse Claude's response
-    const responseText = message.content[0].type === 'text' 
-      ? message.content[0].text 
-      : '';
+    const responseText =
+      message.content[0].type === "text" ? message.content[0].text : "";
 
     // Extract JSON from response (Claude might wrap it in markdown)
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error('Failed to parse AI response');
+      throw new Error("Failed to parse AI response");
     }
 
     const analysis = JSON.parse(jsonMatch[0]);
 
     // Enrich with full story objects
     const relevantStoryIds = analysis.relevantStories || [];
-    const enrichedStories = stories.filter(story => 
+    const enrichedStories = stories.filter((story) =>
       relevantStoryIds.includes(story.id)
     );
 
@@ -131,10 +128,10 @@ Please analyze this candidate's fit for the role and provide your assessment in 
 
     return res.status(200).json(response);
   } catch (error) {
-    console.error('Analysis error:', error);
-    return res.status(500).json({ 
-      error: 'Failed to analyze job',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error("Analysis error:", error);
+    return res.status(500).json({
+      error: "Failed to analyze job",
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }

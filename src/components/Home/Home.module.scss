@@ -2,8 +2,13 @@
 
 /**
  * Home Component Styles
- * All styles consolidated here - no need for separate .ts file
+ * Two-column responsive layout with circular score gauge
  */
+
+// Shared card styles
+%card {
+  --fui-Card--size: 24px;
+}
 
 .app {
   min-height: 100vh;
@@ -12,8 +17,9 @@
   flex-direction: column;
 }
 
+// Enhanced Header Section
 .header {
-  padding: $spacing-xxl $spacing-lg;
+  padding: $spacing-xxl $spacing-xl;
   background: linear-gradient(
     135deg,
     $color-brand-primary 0%,
@@ -26,47 +32,108 @@
 }
 
 .headerContent {
+  max-width: 1400px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: $spacing-xl;
+  align-items: center;
+}
+
+.headshotSection {
   display: flex;
   align-items: center;
   gap: $spacing-lg;
 }
 
 .headshot {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  border: 3px solid $color-neutral-background-1;
+  border: 4px solid $color-neutral-background-1;
   object-fit: cover;
   box-shadow: $shadow-8;
 }
 
-.headerText {
+.headerInfo {
   display: flex;
   flex-direction: column;
   gap: $spacing-xs;
-  text-align: left;
 }
 
-.headerTitle {
+.name {
+  font-size: 32px;
+  font-weight: $font-weight-bold;
   color: $color-neutral-background-1;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.title {
+  font-size: 18px;
+  color: rgba($color-neutral-background-1, 0.95);
   margin: 0;
 }
 
-.subtitle {
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 15px;
   color: rgba($color-neutral-background-1, 0.9);
-  font-size: 16px;
 }
 
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.videoPlaceholder {
+  background: rgba($color-neutral-background-1, 0.15);
+  border: 2px dashed rgba($color-neutral-background-1, 0.4);
+  border-radius: $border-radius-md;
+  padding: $spacing-xl $spacing-lg;
+  text-align: center;
+  min-width: 280px;
+  backdrop-filter: blur(10px);
+}
+
+.videoPlaceholderText {
+  color: $color-neutral-background-1;
+  font-size: 14px;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+}
+
+// Main Content - Two Column Layout
 .main {
   flex: 1;
-  max-width: 960px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  padding: $spacing-xl $spacing-lg;
+  padding: $spacing-xl;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: $spacing-xl;
+  align-items: start;
+}
+
+// Left Column - Input & Score
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  position: sticky;
+  top: $spacing-lg;
 }
 
 .analyzerCard {
-  margin-bottom: $spacing-lg;
+  @extend %card;
+  height: fit-content;
 }
 
 .inputGroup {
@@ -79,38 +146,95 @@
   font-weight: $font-weight-semibold;
 }
 
-.results {
-  margin-top: $spacing-xl;
-}
-
-// Match Score Card - uses success colors
-.matchScoreCard {
-  background: linear-gradient(
-    135deg,
-    $color-success 0%,
-    $color-success-dark 100%
-  );
-  color: $color-neutral-background-1;
+// Circular Score Gauge
+.scoreCard {
+  @extend %card;
+  padding-top: $spacing-xxl;
   text-align: center;
-  margin-bottom: $spacing-lg;
-  padding: $spacing-xl;
-  border-radius: $border-radius-lg;
+  background: $color-neutral-background-1;
 }
 
-.matchScoreTitle {
-  color: $color-neutral-background-1;
-  margin-bottom: $spacing-md;
+.scoreGauge {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto $spacing-md;
 }
 
-.score {
-  font-size: 64px;
+.scoreCircle {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.scoreCircleBackground {
+  fill: none;
+  stroke: $color-neutral-background-2;
+  stroke-width: 12;
+}
+
+.scoreCircleProgress {
+  fill: none;
+  stroke: $color-brand-primary;
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease-in-out;
+}
+
+.scoreValue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
   font-weight: $font-weight-bold;
+  color: $color-brand-primary;
   line-height: 1;
-  color: $color-neutral-background-1;
+}
+
+.scoreLabel {
+  font-size: 14px;
+  color: $color-text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: $spacing-sm;
+}
+
+// Skills Card
+.skillsCard {
+  @extend %card;
+  background: $color-neutral-background-1;
+}
+
+.skillsTitle {
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.skillsCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  justify-content: center;
+}
+
+// Right Column - Results
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
 }
 
 .section {
-  margin-bottom: $spacing-lg;
+  @extend %card;
+  min-height: 200px;
 }
 
 .sectionTitle {
@@ -130,7 +254,13 @@
   line-height: 1.6;
 }
 
+// Stories Section (Full Width in Right Column)
+.storiesSection {
+  grid-column: 1 / -1;
+}
+
 .storyCard {
+  @extend %card;
   margin-bottom: $spacing-md;
 }
 
@@ -141,10 +271,17 @@
   margin-top: $spacing-md;
 }
 
+// Recommendation (Full Width in Right Column)
+.recommendationSection {
+  grid-column: 1 / -1;
+}
+
 .recommendationCard {
+  @extend %card;
   background-color: $color-brand-background;
 }
 
+// Footer
 .footer {
   text-align: center;
   padding: $spacing-xl $spacing-lg;
@@ -163,32 +300,89 @@
   }
 }
 
-// Responsive
+// Responsive Breakpoints
+@media (max-width: 1200px) {
+  .contentGrid {
+    grid-template-columns: 360px 1fr;
+    gap: $spacing-lg;
+  }
+
+  .headerContent {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  .headshotSection {
+    justify-content: center;
+  }
+
+  .contactInfo {
+    align-items: center;
+    text-align: center;
+  }
+
+  .videoPlaceholder {
+    width: 100%;
+  }
+}
+
+@media (max-width: 992px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+  }
+
+  .leftColumn {
+    position: static;
+  }
+
+  .resultsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     padding: $spacing-xl $spacing-md;
   }
 
   .headerContent {
-    flex-direction: column;
-    text-align: center;
+    gap: $spacing-md;
   }
 
-  .headerText {
-    text-align: center;
-    align-items: center;
+  .headshotSection {
+    flex-direction: column;
+    gap: $spacing-md;
   }
 
   .headshot {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .headerInfo {
+    align-items: center;
+    text-align: center;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .title {
+    font-size: 16px;
   }
 
   .main {
     padding: $spacing-lg $spacing-md;
   }
 
-  .score {
-    font-size: 48px;
+  .scoreGauge {
+    width: 150px;
+    height: 150px;
+  }
+
+  .scoreValue {
+    font-size: 40px;
   }
 }
