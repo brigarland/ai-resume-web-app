@@ -20,6 +20,7 @@ export interface IJobAnalysisRequest {
 }
 
 export interface IJobAnalysisResponse {
+  jobTitle?: string;
   matchScore: number;
   strengths: string[];
   gaps: string[];

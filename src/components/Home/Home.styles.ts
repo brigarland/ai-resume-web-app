@@ -237,9 +237,23 @@ export const useStyles = makeStyles({
   // Score Card
   scoreCard: {
     backgroundColor: tokens.colorNeutralBackground1,
-    ...shorthands.padding("48px", "24px", "24px"),
+    ...shorthands.padding("24px"),
     boxShadow: tokens.shadow4,
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
+  },
+
+  scoreCardHeader: {
+    marginBottom: "24px",
+  },
+
+  scoreCardTitle: {
+    marginBottom: "12px",
+  },
+
+  shareButtons: {
+    display: "flex",
+    ...shorthands.gap("8px"),
+    flexWrap: "wrap",
   },
 
   scoreGauge: {
@@ -293,7 +307,6 @@ export const useStyles = makeStyles({
 
   scoreLabel: {
     fontSize: "14px",
-    lineHeight: "0.2",
     color: tokens.colorNeutralForeground2,
     textTransform: "uppercase",
     letterSpacing: "0.5px",
@@ -301,7 +314,7 @@ export const useStyles = makeStyles({
   },
 
   scoreSubtitleContainer: {
-    marginTop: "0",
+    marginTop: "8px",
     display: "flex",
     alignItems: "center",
     ...shorthands.gap("6px"),
@@ -330,7 +343,7 @@ export const useStyles = makeStyles({
   },
 
   skillsTitle: {
-    marginBottom: "8px",
+    marginBottom: "24px",
     textAlign: "center",
   },
 

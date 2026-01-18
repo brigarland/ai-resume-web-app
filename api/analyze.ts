@@ -78,6 +78,7 @@ Your task is to analyze the candidate's fit for the role and return a structured
 
 Response format:
 {
+  "jobTitle": "<extracted job title if clearly identifiable, otherwise omit>",
   "matchScore": <number 0-100>,
   "strengths": [<array of specific strengths with examples>],
   "gaps": [<array of skill/experience gaps>],
@@ -130,6 +131,7 @@ Please analyze this candidate's fit for the role and provide your assessment in 
     );
 
     const response: IJobAnalysisResponse = {
+      jobTitle: analysis.jobTitle,
       matchScore: analysis.matchScore,
       strengths: analysis.strengths,
       gaps: analysis.gaps || [],

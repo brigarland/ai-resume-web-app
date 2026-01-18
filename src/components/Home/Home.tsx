@@ -30,6 +30,9 @@ import {
   Video24Regular,
   DocumentText24Regular,
   Info16Regular,
+  Link20Regular,
+  Mail20Regular,
+  ShareAndroid20Regular,
 } from "@fluentui/react-icons";
 import { apiUrl } from "@/constants/env";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
@@ -50,6 +53,12 @@ function Home() {
     error: null,
   });
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [nativeShareAvailable, setNativeShareAvailable] = useState(false);
+
+  // Check if native share is available
+  useEffect(() => {
+    setNativeShareAvailable(!!navigator.share);
+  }, []);
 
   // Extracted analysis function that can be called with any URL or description
   const performAnalysis = async (
@@ -127,6 +136,61 @@ function Home() {
       performAnalysis(jobUrl);
     } else {
       performAnalysis(undefined, jobDescription);
+    }
+  };
+
+  // Generate shareable URL
+  const getShareUrl = () => {
+    if (inputMode === "url" && jobUrl) {
+      const baseUrl = window.location.origin;
+      return `${baseUrl}?url=${encodeURIComponent(jobUrl)}`;
+    }
+    return window.location.href;
+  };
+
+  // Copy link to clipboard
+  const handleCopyLink = async () => {
+    const shareUrl = getShareUrl();
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      // Could add a toast notification here
+      alert("Link copied to clipboard!");
+    } catch (error) {
+      console.error("Failed to copy link:", error);
+    }
+  };
+
+  // Share via email
+  const handleShareEmail = () => {
+    const shareUrl = getShareUrl();
+    const jobTitleText = analysisState.data?.jobTitle
+      ? `${analysisState.data.jobTitle} - `
+      : "";
+    const subject = encodeURIComponent(
+      `${jobTitleText}Job Analysis from Brian Garland`
+    );
+    const body = encodeURIComponent(
+      `Check out this job analysis:\n\n${shareUrl}\n\nMatch Score: ${analysisState.data?.matchScore}%`
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
+  // Native share (if available)
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      const shareUrl = getShareUrl();
+      const jobTitleText = analysisState.data?.jobTitle
+        ? `${analysisState.data.jobTitle} - `
+        : "";
+      try {
+        await navigator.share({
+          title: `${jobTitleText}Job Analysis`,
+          text: `Match Score: ${analysisState.data?.matchScore}%`,
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.error("Share failed:", error);
+      }
     }
   };
 
@@ -267,6 +331,43 @@ function Home() {
           {analysisState.status === "complete" && analysisState.data && (
             <div className={styles.leftColumn}>
               <Card className={styles.scoreCard}>
+                {/* Header with Job Title and Share Buttons */}
+                <div className={styles.scoreCardHeader}>
+                  {analysisState.data.jobTitle && (
+                    <Title3 className={styles.scoreCardTitle}>
+                      {analysisState.data.jobTitle}
+                    </Title3>
+                  )}
+                  <div className={styles.shareButtons}>
+                    <Button
+                      appearance="subtle"
+                      size="small"
+                      icon={<Link20Regular />}
+                      onClick={handleCopyLink}
+                    >
+                      Copy Link
+                    </Button>
+                    <Button
+                      appearance="subtle"
+                      size="small"
+                      icon={<Mail20Regular />}
+                      onClick={handleShareEmail}
+                    >
+                      Email
+                    </Button>
+                    {nativeShareAvailable && (
+                      <Button
+                        appearance="subtle"
+                        size="small"
+                        icon={<ShareAndroid20Regular />}
+                        onClick={handleNativeShare}
+                      >
+                        Share
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
                 <div className={styles.scoreGauge}>
                   <svg className={styles.scoreCircle} viewBox="0 0 180 180">
                     <circle
