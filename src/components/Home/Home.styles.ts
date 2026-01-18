@@ -238,7 +238,6 @@ export const useStyles = makeStyles({
   scoreCard: {
     backgroundColor: tokens.colorNeutralBackground1,
     ...shorthands.padding("48px", "24px", "24px"),
-    textAlign: "center",
     boxShadow: tokens.shadow4,
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
   },
@@ -247,7 +246,9 @@ export const useStyles = makeStyles({
     position: "relative",
     width: "180px",
     height: "180px",
-    margin: "0 auto 16px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginBottom: "16px",
     "@media (max-width: 768px)": {
       width: "150px",
       height: "150px",
@@ -292,10 +293,32 @@ export const useStyles = makeStyles({
 
   scoreLabel: {
     fontSize: "14px",
+    lineHeight: "0.2",
     color: tokens.colorNeutralForeground2,
     textTransform: "uppercase",
     letterSpacing: "0.5px",
     marginTop: "8px",
+  },
+
+  scoreSubtitleContainer: {
+    marginTop: "0",
+    display: "flex",
+    alignItems: "center",
+    ...shorthands.gap("6px"),
+  },
+
+  scoreSubtitle: {
+    color: tokens.colorNeutralForeground3,
+    fontStyle: "italic",
+  },
+
+  infoIcon: {
+    cursor: "help",
+    color: tokens.colorNeutralForeground3,
+  },
+
+  tooltipContent: {
+    maxWidth: "280px",
   },
 
   // Skills Card
@@ -307,7 +330,7 @@ export const useStyles = makeStyles({
   },
 
   skillsTitle: {
-    marginBottom: "24px",
+    marginBottom: "8px",
     textAlign: "center",
   },
 
