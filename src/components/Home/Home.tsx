@@ -28,9 +28,11 @@ import {
 import { apiUrl } from "@/constants/env";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
 import type { IJobAnalysisRequest, IAnalysisState } from "@/types";
-import styles from "./Home.module.scss";
+import { useStyles } from "./Home.styles";
 
 function Home() {
+  const styles = useStyles();
+
   const [jobUrl, setJobUrl] = useState("");
   const [analysisState, setAnalysisState] = useState<IAnalysisState>({
     status: "idle",
@@ -320,7 +322,7 @@ function Home() {
 
       <footer className={styles.footer}>
         <Caption1>
-          Built by Brian Garland • Portfolio project demonstrating AI
+          Built by Brian Garland â€¢ Portfolio project demonstrating AI
           integration
         </Caption1>
         <br />
