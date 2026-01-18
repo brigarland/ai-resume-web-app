@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -39,9 +39,11 @@ function Home() {
     data: null,
     error: null,
   });
+  const [autoLoaded, setAutoLoaded] = useState(false);
 
-  const handleAnalyze = async () => {
-    if (!jobUrl.trim()) {
+  // Extracted analysis function that can be called with any URL
+  const performAnalysis = async (urlToAnalyze: string) => {
+    if (!urlToAnalyze.trim()) {
       return;
     }
 
@@ -53,7 +55,7 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ jobUrl } as IJobAnalysisRequest),
+        body: JSON.stringify({ jobUrl: urlToAnalyze } as IJobAnalysisRequest),
       });
 
       if (!response.ok) {
@@ -69,6 +71,40 @@ function Home() {
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }
+  };
+
+  // Check for URL parameter and auto-submit on mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlParam = urlParams.get("url");
+
+    if (urlParam) {
+      const decodedUrl = decodeURIComponent(urlParam);
+      setJobUrl(decodedUrl);
+      setAutoLoaded(true);
+
+      // Auto-submit after setting the URL
+      // Small delay to ensure state is updated and UI has rendered
+      setTimeout(() => {
+        performAnalysis(decodedUrl);
+        // Clear the URL parameter after auto-submit to avoid confusion
+        clearUrlParameter();
+      }, 100);
+    }
+  }, []);
+
+  // Clear the URL parameter from the address bar
+  const clearUrlParameter = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("url");
+    window.history.replaceState({}, "", url.pathname);
+  };
+
+  const handleAnalyze = async () => {
+    // Clear URL parameter if present (user is manually submitting a new analysis)
+    clearUrlParameter();
+    setAutoLoaded(false);
+    performAnalysis(jobUrl);
   };
 
   // Calculate circular progress for score gauge
@@ -132,6 +168,14 @@ function Home() {
                   </Caption1>
                 }
               />
+
+              {autoLoaded && (
+                <MessageBar intent="info" style={{ marginTop: "24px" }}>
+                  <MessageBarBody>
+                    Auto-analyzing job posting from shared link...
+                  </MessageBarBody>
+                </MessageBar>
+              )}
 
               <div className={styles.inputGroup}>
                 <Text className={styles.inputLabel}>Job Posting URL</Text>
@@ -322,7 +366,7 @@ function Home() {
 
       <footer className={styles.footer}>
         <Caption1>
-          Built by Brian Garland â€¢ Portfolio project demonstrating AI
+          Built by Brian Garland • Portfolio project demonstrating AI
           integration
         </Caption1>
         <br />
