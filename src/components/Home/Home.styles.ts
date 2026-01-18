@@ -11,7 +11,7 @@ export const useStyles = makeStyles({
 
   // Header Section
   header: {
-    ...shorthands.padding("48px", "32px"),
+    ...shorthands.padding("32px"),
     background: `linear-gradient(135deg, ${tokens.colorBrandBackground} 0%, ${tokens.colorBrandBackgroundHover} 100%)`,
     color: tokens.colorNeutralForegroundOnBrand,
     display: "flex",
@@ -132,6 +132,49 @@ export const useStyles = makeStyles({
     fontSize: "14px",
     fontWeight: tokens.fontWeightSemibold,
     ...shorthands.margin(0),
+  },
+  // Input Section (new full-width section below header)
+  inputSection: {
+    ...shorthands.padding("16px", "32px", "32px"),
+    backgroundColor: tokens.colorNeutralBackground3,
+    borderBottom: `1px solid ${tokens.colorNeutralStroke1}`,
+    display: "flex",
+    justifyContent: "center",
+    "@media (max-width: 768px)": {
+      ...shorthands.padding("24px", "16px"),
+    },
+  },
+
+  inputSectionContent: {
+    maxWidth: "1400px",
+    width: "100%",
+  },
+
+  inputForm: {
+    display: "grid",
+    gridTemplateColumns: "1fr auto",
+    ...shorthands.gap("16px"),
+    alignItems: "end",
+    "@media (max-width: 992px)": {
+      gridTemplateColumns: "1fr",
+    },
+  },
+
+  inputTabs: {
+    marginBottom: "16px",
+  },
+
+  textareaWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("8px"),
+  },
+
+  submitButton: {
+    minWidth: "200px",
+    "@media (max-width: 992px)": {
+      width: "100%",
+    },
   },
 
   // Main Content

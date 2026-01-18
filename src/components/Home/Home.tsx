@@ -3,6 +3,7 @@ import {
   Card,
   CardHeader,
   Input,
+  Textarea,
   Button,
   Text,
   Title2,
@@ -13,6 +14,8 @@ import {
   MessageBar,
   MessageBarBody,
   Spinner,
+  Tab,
+  TabList,
   tokens,
 } from "@fluentui/react-components";
 import {
@@ -24,16 +27,21 @@ import {
   Mail24Regular,
   Location24Regular,
   Video24Regular,
+  DocumentText24Regular,
 } from "@fluentui/react-icons";
 import { apiUrl } from "@/constants/env";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
 import type { IJobAnalysisRequest, IAnalysisState } from "@/types";
 import { useStyles } from "./Home.styles";
 
+type TInputMode = "url" | "description";
+
 function Home() {
   const styles = useStyles();
 
+  const [inputMode, setInputMode] = useState<TInputMode>("url");
   const [jobUrl, setJobUrl] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [analysisState, setAnalysisState] = useState<IAnalysisState>({
     status: "idle",
     data: null,
@@ -41,21 +49,28 @@ function Home() {
   });
   const [autoLoaded, setAutoLoaded] = useState(false);
 
-  // Extracted analysis function that can be called with any URL
-  const performAnalysis = async (urlToAnalyze: string) => {
-    if (!urlToAnalyze.trim()) {
+  // Extracted analysis function that can be called with any URL or description
+  const performAnalysis = async (
+    urlToAnalyze?: string,
+    descriptionToAnalyze?: string
+  ) => {
+    if (!urlToAnalyze?.trim() && !descriptionToAnalyze?.trim()) {
       return;
     }
 
     setAnalysisState({ status: "loading", data: null, error: null });
 
     try {
+      const requestBody: IJobAnalysisRequest = urlToAnalyze
+        ? { jobUrl: urlToAnalyze }
+        : { jobDescription: descriptionToAnalyze };
+
       const response = await fetch(`${apiUrl}/api/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ jobUrl: urlToAnalyze } as IJobAnalysisRequest),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -81,6 +96,7 @@ function Home() {
     if (urlParam) {
       const decodedUrl = decodeURIComponent(urlParam);
       setJobUrl(decodedUrl);
+      setInputMode("url");
       setAutoLoaded(true);
 
       // Auto-submit after setting the URL
@@ -104,7 +120,12 @@ function Home() {
     // Clear URL parameter if present (user is manually submitting a new analysis)
     clearUrlParameter();
     setAutoLoaded(false);
-    performAnalysis(jobUrl);
+
+    if (inputMode === "url") {
+      performAnalysis(jobUrl);
+    } else {
+      performAnalysis(undefined, jobDescription);
+    }
   };
 
   // Calculate circular progress for score gauge
@@ -118,6 +139,9 @@ function Home() {
   const scoreData = analysisState.data?.matchScore
     ? calculateCircleProgress(analysisState.data.matchScore)
     : { circumference: 527.79, offset: 527.79 };
+
+  const isFormValid =
+    inputMode === "url" ? jobUrl.trim() : jobDescription.trim();
 
   return (
     <div className={styles.app}>
@@ -155,132 +179,147 @@ function Home() {
         </div>
       </header>
 
-      <main className={styles.main}>
-        <div className={styles.contentGrid}>
-          {/* Left Column: Input Form + Score */}
-          <div className={styles.leftColumn}>
-            <Card className={styles.analyzerCard}>
-              <CardHeader
-                header={<Title3>Enter Job Posting</Title3>}
-                description={
-                  <Caption1>
-                    Paste the URL of a job posting to analyze your fit
-                  </Caption1>
-                }
+      {/* Input Section */}
+      <section className={styles.inputSection}>
+        <div className={styles.inputSectionContent}>
+          <TabList
+            selectedValue={inputMode}
+            onTabSelect={(_, data) => setInputMode(data.value as TInputMode)}
+            className={styles.inputTabs}
+          >
+            <Tab value="url" icon={<Link24Regular />}>
+              Job Posting URL
+            </Tab>
+            <Tab value="description" icon={<DocumentText24Regular />}>
+              Job Description
+            </Tab>
+          </TabList>
+
+          {autoLoaded && inputMode === "url" && (
+            <MessageBar intent="info" style={{ marginBottom: "16px" }}>
+              <MessageBarBody>
+                Auto-analyzing job posting from shared link...
+              </MessageBarBody>
+            </MessageBar>
+          )}
+
+          <div className={styles.inputForm}>
+            {inputMode === "url" ? (
+              <Input
+                type="url"
+                placeholder="https://apply.careers.microsoft.com/..."
+                value={jobUrl}
+                onChange={(_, data) => setJobUrl(data.value)}
+                disabled={analysisState.status === "loading"}
+                contentBefore={<Link24Regular />}
+                size="large"
+                style={{ width: "100%" }}
               />
-
-              {autoLoaded && (
-                <MessageBar intent="info" style={{ marginTop: "24px" }}>
-                  <MessageBarBody>
-                    Auto-analyzing job posting from shared link...
-                  </MessageBarBody>
-                </MessageBar>
-              )}
-
-              <div className={styles.inputGroup}>
-                <Text className={styles.inputLabel}>Job Posting URL</Text>
-                <Input
-                  type="url"
-                  placeholder="https://apply.careers.microsoft.com/..."
-                  value={jobUrl}
-                  onChange={(_, data) => setJobUrl(data.value)}
+            ) : (
+              <div className={styles.textareaWrapper}>
+                <Textarea
+                  placeholder="Paste the job description here, or type it in..."
+                  value={jobDescription}
+                  onChange={(_, data) => setJobDescription(data.value)}
                   disabled={analysisState.status === "loading"}
-                  contentBefore={<Link24Regular />}
-                  size="large"
+                  rows={6}
+                  resize="vertical"
                   style={{ width: "100%" }}
                 />
               </div>
-
-              <Button
-                appearance="primary"
-                size="large"
-                onClick={handleAnalyze}
-                disabled={!jobUrl.trim() || analysisState.status === "loading"}
-                icon={
-                  analysisState.status === "loading" ? (
-                    <Spinner size="tiny" />
-                  ) : (
-                    <ChartMultiple24Regular />
-                  )
-                }
-                style={{ width: "100%" }}
-              >
-                {analysisState.status === "loading"
-                  ? "Analyzing..."
-                  : "Analyze Job Fit"}
-              </Button>
-
-              {analysisState.status === "error" && (
-                <MessageBar intent="error" style={{ marginTop: "24px" }}>
-                  <MessageBarBody>
-                    <strong>Error:</strong> {analysisState.error}
-                  </MessageBarBody>
-                </MessageBar>
-              )}
-            </Card>
-
-            {/* Circular Score Gauge */}
-            {analysisState.status === "complete" && analysisState.data && (
-              <>
-                <Card className={styles.scoreCard}>
-                  <div className={styles.scoreGauge}>
-                    <svg className={styles.scoreCircle} viewBox="0 0 180 180">
-                      <circle
-                        className={styles.scoreCircleBackground}
-                        cx="90"
-                        cy="90"
-                        r="84"
-                      />
-                      <circle
-                        className={styles.scoreCircleProgress}
-                        cx="90"
-                        cy="90"
-                        r="84"
-                        strokeDasharray={scoreData.circumference}
-                        strokeDashoffset={scoreData.offset}
-                      />
-                    </svg>
-                    <div className={styles.scoreValue}>
-                      {analysisState.data.matchScore}%
-                    </div>
-                  </div>
-                  <Text className={styles.scoreLabel}>Match Score</Text>
-                </Card>
-
-                {/* Relevant Skills Cloud */}
-                <Card className={styles.skillsCard}>
-                  <Title3 className={styles.skillsTitle}>
-                    Relevant Skills
-                  </Title3>
-                  <div className={styles.skillsCloud}>
-                    {[
-                      "React",
-                      "TypeScript",
-                      "JavaScript",
-                      "Azure",
-                      "C#",
-                      "Python",
-                      "Agile",
-                      "UI/UX Design",
-                      "Fluent UI",
-                      "Data Visualization",
-                      "RESTful APIs",
-                      "SQL",
-                    ].map((skill, i) => (
-                      <Badge
-                        key={i}
-                        appearance="filled"
-                        color="brand"
-                        size="large"
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </Card>
-              </>
             )}
+
+            <Button
+              appearance="primary"
+              size="large"
+              onClick={handleAnalyze}
+              disabled={!isFormValid || analysisState.status === "loading"}
+              icon={
+                analysisState.status === "loading" ? (
+                  <Spinner size="tiny" />
+                ) : (
+                  <ChartMultiple24Regular />
+                )
+              }
+              className={styles.submitButton}
+            >
+              {analysisState.status === "loading"
+                ? "Analyzing..."
+                : "Analyze Job Fit"}
+            </Button>
           </div>
+
+          {analysisState.status === "error" && (
+            <MessageBar intent="error" style={{ marginTop: "16px" }}>
+              <MessageBarBody>
+                <strong>Error:</strong> {analysisState.error}
+              </MessageBarBody>
+            </MessageBar>
+          )}
+        </div>
+      </section>
+
+      <main className={styles.main}>
+        <div className={styles.contentGrid}>
+          {/* Left Column: Score + Skills */}
+          {analysisState.status === "complete" && analysisState.data && (
+            <div className={styles.leftColumn}>
+              <Card className={styles.scoreCard}>
+                <div className={styles.scoreGauge}>
+                  <svg className={styles.scoreCircle} viewBox="0 0 180 180">
+                    <circle
+                      className={styles.scoreCircleBackground}
+                      cx="90"
+                      cy="90"
+                      r="84"
+                    />
+                    <circle
+                      className={styles.scoreCircleProgress}
+                      cx="90"
+                      cy="90"
+                      r="84"
+                      strokeDasharray={scoreData.circumference}
+                      strokeDashoffset={scoreData.offset}
+                    />
+                  </svg>
+                  <div className={styles.scoreValue}>
+                    {analysisState.data.matchScore}%
+                  </div>
+                </div>
+                <Text className={styles.scoreLabel}>Match Score</Text>
+              </Card>
+
+              {/* Relevant Skills Cloud */}
+              <Card className={styles.skillsCard}>
+                <Title3 className={styles.skillsTitle}>Relevant Skills</Title3>
+                <div className={styles.skillsCloud}>
+                  {[
+                    "React",
+                    "TypeScript",
+                    "JavaScript",
+                    "Azure",
+                    "C#",
+                    "Python",
+                    "Agile",
+                    "UI/UX Design",
+                    "Fluent UI",
+                    "Data Visualization",
+                    "RESTful APIs",
+                    "SQL",
+                  ].map((skill, i) => (
+                    <Badge
+                      key={i}
+                      appearance="filled"
+                      color="brand"
+                      size="large"
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          )}
 
           {/* Right Column: Results */}
           {analysisState.status === "complete" && analysisState.data && (

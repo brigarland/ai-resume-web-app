@@ -19,8 +19,8 @@ export interface IResumeData {
 }
 
 export interface IJobAnalysisRequest {
-  jobUrl: string;
-  jobDescription?: string; // Optional: if we want to allow paste instead of URL
+  jobUrl?: string;
+  jobDescription?: string; // Either jobUrl or jobDescription must be provided
 }
 
 export interface IJobAnalysisResponse {
@@ -33,7 +33,7 @@ export interface IJobAnalysisResponse {
 }
 
 export interface IAnalysisState {
-  status: 'idle' | 'loading' | 'streaming' | 'complete' | 'error';
+  status: "idle" | "loading" | "streaming" | "complete" | "error";
   data: IJobAnalysisResponse | null;
   error: string | null;
 }

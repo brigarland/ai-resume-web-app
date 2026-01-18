@@ -3,7 +3,7 @@
  * Runtime: Node.js 20.x via @vercel/node@3.2.21
  *
  * This function:
- * 1. Fetches the job posting content
+ * 1. Accepts either a job URL or job description text
  * 2. Uses Claude to analyze job fit against resume + stories
  * 3. Returns structured analysis with match score, strengths, gaps, and relevant stories
  */
@@ -12,8 +12,8 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Anthropic from "@anthropic-ai/sdk";
 
 // Import resume and stories (in production, these would be in a database)
-import { stories, resumeData } from "./lib/data";
-import type { IJobAnalysisRequest, IJobAnalysisResponse } from "./lib/types";
+import { stories, resumeData } from "./lib/data.js";
+import type { IJobAnalysisRequest, IJobAnalysisResponse } from "./lib/types.js";
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -41,20 +41,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { jobUrl } = req.body as IJobAnalysisRequest;
+    const { jobUrl, jobDescription: providedJobDescription } =
+      req.body as IJobAnalysisRequest;
 
-    if (!jobUrl) {
-      return res.status(400).json({ error: "Job URL is required" });
+    if (!jobUrl && !providedJobDescription) {
+      return res
+        .status(400)
+        .json({ error: "Either Job URL or Job Description is required" });
     }
 
-    // TODO: Fetch job posting content
-    // For now, we'll use a placeholder
-    const jobDescription = `
-      [Job posting content will be fetched from: ${jobUrl}]
-      
-      For testing purposes, using placeholder job description.
-      This would normally be scraped from the provided URL.
-    `;
+    // Determine job description source
+    let jobDescription: string;
+
+    if (providedJobDescription) {
+      // User provided direct job description text
+      jobDescription = providedJobDescription;
+    } else {
+      // TODO: Fetch job posting content from URL
+      // For now, we'll use a placeholder
+      jobDescription = `
+        [Job posting content will be fetched from: ${jobUrl}]
+        
+        For testing purposes, using placeholder job description.
+        This would normally be scraped from the provided URL.
+      `;
+    }
 
     // Construct the analysis prompt
     const systemPrompt = `You are an expert career advisor analyzing job fit. 
