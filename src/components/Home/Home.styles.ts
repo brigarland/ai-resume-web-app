@@ -180,9 +180,9 @@ export const useStyles = makeStyles({
   // Main Content
   main: {
     flex: 1,
-    maxWidth: "1400px",
     width: "100%",
-    ...shorthands.margin(0, "auto"),
+    maxWidth: "1800px",
+    margin: "0 auto",
     ...shorthands.padding("32px"),
     "@media (max-width: 768px)": {
       ...shorthands.padding("24px", "16px"),
@@ -191,14 +191,14 @@ export const useStyles = makeStyles({
 
   contentGrid: {
     display: "grid",
-    gridTemplateColumns: "400px 1fr",
+    gridTemplateColumns: "400px 1fr 400px",
     ...shorthands.gap("32px"),
     alignItems: "start",
-    "@media (max-width: 1200px)": {
+    "@media (max-width: 1400px)": {
       gridTemplateColumns: "360px 1fr",
       ...shorthands.gap("24px"),
     },
-    "@media (max-width: 992px)": {
+    "@media (max-width: 600px)": {
       gridTemplateColumns: "1fr",
       ...shorthands.gap("24px"),
     },
@@ -211,7 +211,7 @@ export const useStyles = makeStyles({
     ...shorthands.gap("24px"),
     position: "sticky",
     top: "24px",
-    "@media (max-width: 992px)": {
+    "@media (max-width: 600px)": {
       position: "static",
     },
   },
@@ -361,14 +361,33 @@ export const useStyles = makeStyles({
     ...shorthands.gap("24px"),
   },
 
-  resultsGrid: {
+  // Middle Column
+  middleColumn: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("24px"),
+  },
+
+  strengthsGapsGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     ...shorthands.gap("24px"),
-    marginBottom: "24px",
-    "@media (max-width: 992px)": {
+    "@media (max-width: 900px)": {
       gridTemplateColumns: "1fr",
     },
+  },
+
+  // Third Column (Stories)
+  storiesColumn: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("24px"),
+  },
+
+  resultsGrid: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("24px"),
   },
 
   section: {

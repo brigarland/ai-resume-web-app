@@ -460,10 +460,17 @@ function Home() {
             </div>
           )}
 
-          {/* Right Column: Results */}
+          {/* Middle Column: Recommendation + Strengths/Gaps */}
           {analysisState.status === "complete" && analysisState.data && (
-            <div className={styles.rightColumn}>
-              <div className={styles.resultsGrid}>
+            <div className={styles.middleColumn}>
+              {/* Recommendation - Full Width */}
+              <Card className={styles.recommendationCard}>
+                <CardHeader header={<Title2>Recommendation</Title2>} />
+                <Body1>{analysisState.data.recommendation}</Body1>
+              </Card>
+
+              {/* Strengths and Growth Areas in 2 columns */}
+              <div className={styles.strengthsGapsGrid}>
                 {/* Strengths */}
                 <Card className={styles.section}>
                   <div className={styles.sectionTitle}>
@@ -500,51 +507,41 @@ function Home() {
                   </Card>
                 )}
               </div>
-
-              {/* Relevant Stories - Full Width */}
-              {analysisState.data.relevantStories.length > 0 && (
-                <div className={styles.storiesSection}>
-                  <div className={styles.sectionTitle}>
-                    <Book24Regular color={tokens.colorBrandForeground1} />
-                    <Title3>Relevant Experience Stories</Title3>
-                  </div>
-                  {analysisState.data.relevantStories.map((story) => (
-                    <Card key={story.id} className={styles.storyCard}>
-                      <CardHeader
-                        header={<Title3>{story.title}</Title3>}
-                        description={<Body1>{story.context}</Body1>}
-                      />
-                      <div className={styles.storySkills}>
-                        {story.skills.map((skill, i) => (
-                          <Badge
-                            key={i}
-                            appearance="outline"
-                            color="informative"
-                          >
-                            {skill}
-                          </Badge>
-                        ))}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-
-              {/* Recommendation - Full Width */}
-              <div className={styles.recommendationSection}>
-                <Card className={styles.recommendationCard}>
-                  <CardHeader header={<Title2>Recommendation</Title2>} />
-                  <Body1>{analysisState.data.recommendation}</Body1>
-                </Card>
-              </div>
             </div>
           )}
+
+          {/* Third Column: Relevant Stories */}
+          {analysisState.status === "complete" &&
+            analysisState.data &&
+            analysisState.data.relevantStories.length > 0 && (
+              <div className={styles.storiesColumn}>
+                <div className={styles.sectionTitle}>
+                  <Book24Regular color={tokens.colorBrandForeground1} />
+                  <Title3>Relevant Experience Stories</Title3>
+                </div>
+                {analysisState.data.relevantStories.map((story) => (
+                  <Card key={story.id} className={styles.storyCard}>
+                    <CardHeader
+                      header={<Title3>{story.title}</Title3>}
+                      description={<Body1>{story.context}</Body1>}
+                    />
+                    <div className={styles.storySkills}>
+                      {story.skills.map((skill, i) => (
+                        <Badge key={i} appearance="outline" color="informative">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
         </div>
       </main>
 
       <footer className={styles.footer}>
         <Caption1>
-          Built by Brian Garland â€¢ Portfolio project demonstrating AI
+          Built by Brian Garland Ã¢â‚¬Â¢ Portfolio project demonstrating AI
           integration
         </Caption1>
         <br />
