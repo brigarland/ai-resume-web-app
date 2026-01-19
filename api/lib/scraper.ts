@@ -32,10 +32,16 @@ export async function scrapeJobPosting(
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // Extract job title with h1 -> h2 -> h3 fallback
-    const title = extractJobTitle($);
+    // PRIORITY 1: Try JSON-LD structured data (cleanest approach)
+    const jsonLdData = extractFromJsonLd($);
+    if (jsonLdData) {
+      console.log("Using JSON-LD structured data");
+      return jsonLdData;
+    }
 
-    // Extract job description
+    // PRIORITY 2: Fall back to HTML scraping
+    console.log("JSON-LD not found, falling back to HTML scraping");
+    const title = extractJobTitle($);
     const description = extractJobDescription($);
 
     return { title, description, url };
@@ -46,6 +52,39 @@ export async function scrapeJobPosting(
       }`
     );
   }
+}
+
+/**
+ * Extract job data from JSON-LD structured data (schema.org JobPosting)
+ * This is the cleanest method - many sites include this metadata
+ */
+function extractFromJsonLd($: cheerio.CheerioAPI): IScrapedJobPosting | null {
+  const jsonLdScripts = $('script[type="application/ld+json"]');
+
+  for (let i = 0; i < jsonLdScripts.length; i++) {
+    try {
+      const jsonText = $(jsonLdScripts[i]).html();
+      if (!jsonText) continue;
+
+      const data = JSON.parse(jsonText);
+
+      // Check if it's a JobPosting schema
+      if (data["@type"] === "JobPosting") {
+        const title = data.title || "Job Posting";
+        const description = data.description || "";
+        const url = data.url || "";
+
+        if (description.length > 0) {
+          return { title, description, url };
+        }
+      }
+    } catch (e) {
+      // Skip invalid JSON
+      continue;
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -83,15 +122,96 @@ function isValidJobTitle(text: string): boolean {
 }
 
 /**
- * Extract job description text
+ * Extract visible text content - less aggressive approach
  */
 function extractJobDescription($: cheerio.CheerioAPI): string {
-  const $body = $("body").clone();
-  $body.find("script, style, nav, header, footer, iframe").remove();
+  // Clone to avoid modifying original
+  const $clone = $.root().clone();
 
-  let text = $body.text();
-  text = text.replace(/\s+/g, " ").trim();
+  // Remove only truly non-content elements
+  $clone.find("script").remove();
+  $clone.find("style").remove();
+  $clone.find("noscript").remove();
 
-  // Limit to ~3000 characters to avoid rate limits
-  return text.substring(0, 3000);
+  // Remove navigation - but be careful not to remove main content areas
+  $clone.find('nav[role="navigation"]').remove();
+  $clone.find('[role="banner"]').remove(); // header
+  $clone.find('[role="contentinfo"]').remove(); // footer
+
+  // Try to find main content area - prioritize these selectors
+  const contentSelectors = [
+    "main",
+    '[role="main"]',
+    ".job-description",
+    ".job-details",
+    "#job-description",
+    "#job-details",
+    "article",
+    ".content",
+    "#content",
+  ];
+
+  let $content = null;
+  for (const selector of contentSelectors) {
+    const $found = $clone.find(selector);
+    if ($found.length > 0 && $found.text().trim().length > 100) {
+      $content = $found.first();
+      console.log(`Found content using selector: ${selector}`);
+      break;
+    }
+  }
+
+  // Fallback to body if no main content found
+  if (!$content) {
+    console.log("Using body as fallback");
+    $content = $clone.find("body");
+  }
+
+  // Get text
+  let text = $content.text();
+
+  console.log("Raw text length before cleaning:", text.length);
+
+  // Clean up the text
+  text = cleanText(text);
+
+  console.log("Text length after cleaning:", text.length);
+
+  // Limit to 3000 characters to avoid rate limits
+  if (text.length > 3000) {
+    text = text.substring(0, 3000);
+  }
+
+  return text;
+}
+
+/**
+ * Clean extracted text by removing CSS, JSON, and other non-content
+ */
+function cleanText(text: string): string {
+  // Remove anything that looks like CSS or JSON (contains curly braces)
+  text = text.replace(/\{[^}]*\}/g, " ");
+
+  // Remove multiple sequential opening/closing braces
+  text = text.replace(/[{}[\]]+/g, " ");
+
+  // Remove common CSS/JS patterns
+  text = text.replace(/:\s*#[0-9a-fA-F]{3,6}/g, " "); // color codes
+  text = text.replace(/\d+px/g, " "); // pixel values
+  text = text.replace(/rgba?\([^)]+\)/g, " "); // rgba colors
+
+  // Remove URLs (but keep the domain for context)
+  text = text.replace(/https?:\/\/[^\s]+/g, " ");
+
+  // Remove common noise words/patterns
+  text = text.replace(/\bvar[A-Z][a-zA-Z]+\b/g, " "); // variable names like varTheme
+  text = text.replace(/\b[a-z]+-[a-z]+-[a-z]+-[a-z]+\b/g, " "); // long kebab-case identifiers
+
+  // Collapse multiple spaces
+  text = text.replace(/\s+/g, " ");
+
+  // Remove leading/trailing whitespace
+  text = text.trim();
+
+  return text;
 }

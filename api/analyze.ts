@@ -91,28 +91,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .json({ error: "Either Job URL or Job Description is required" });
     }
 
-    // Build the system prompt
+    // Build the system prompt with strict JSON instruction
     const systemPrompt = `You are an expert career advisor analyzing job fit. 
+
+IMPORTANT: You must respond with ONLY valid JSON. No explanatory text before or after. Just the JSON object.
+
 You will be provided with:
 1. A resume
 2. A collection of personal stories demonstrating competencies
 3. A job description${jobTitle ? " (job title: " + jobTitle + ")" : ""}
 
-Your task is to analyze the candidate's fit for the role and return a structured JSON response.
-
-Response format:
+Return this exact JSON structure:
 {
-  "jobTitle": "${
-    jobTitle || "<extracted job title if clearly identifiable, otherwise omit>"
-  }",
-  "matchScore": <number 0-100>,
-  "strengths": [<array of specific strengths with examples>],
-  "gaps": [<array of skill/experience gaps>],
-  "relevantStories": [<array of story IDs that are most relevant>],
-  "recommendation": "<overall recommendation paragraph>"
+  "jobTitle": "${jobTitle || "extracted job title"}",
+  "matchScore": 85,
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "gaps": ["gap 1", "gap 2"],
+  "relevantStories": ["story-001", "story-002"],
+  "recommendation": "Your overall recommendation here"
 }
 
-Be specific and reference actual skills, experiences, and requirements.`;
+Rules:
+- matchScore must be a number 0-100
+- strengths must be an array of strings
+- gaps must be an array of strings
+- relevantStories must be an array of story IDs from the provided stories
+- recommendation must be a string`;
 
     const userPrompt = `# Resume
 ${resumeData.fullText}
@@ -123,7 +127,7 @@ ${JSON.stringify(stories, null, 2)}
 # Job Description
 ${jobDescription}
 
-Please analyze this candidate's fit for the role and provide your assessment in JSON format.`;
+Analyze this candidate's fit and respond with ONLY the JSON object, no other text.`;
 
     // Call Claude API
     const message = await anthropic.messages.create({
@@ -142,13 +146,91 @@ Please analyze this candidate's fit for the role and provide your assessment in 
     const responseText =
       message.content[0].type === "text" ? message.content[0].text : "";
 
-    // Extract JSON (Claude might wrap it in markdown)
-    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("Failed to parse AI response");
+    console.log("=== CLAUDE RAW RESPONSE ===");
+    console.log(responseText);
+    console.log("===========================");
+
+    // Try multiple JSON extraction methods
+    let analysis;
+    try {
+      // Method 1: Try parsing directly
+      analysis = JSON.parse(responseText);
+      console.log("Parsed via Method 1 (direct parse)");
+    } catch (e1) {
+      try {
+        // Method 2: Extract from markdown code block
+        const codeBlockMatch = responseText.match(
+          /```(?:json)?\s*([\s\S]*?)```/
+        );
+        if (codeBlockMatch) {
+          analysis = JSON.parse(codeBlockMatch[1]);
+          console.log("Parsed via Method 2 (code block)");
+        } else {
+          // Method 3: Find first { to last }
+          const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) {
+            throw new Error("No JSON found in response");
+          }
+          analysis = JSON.parse(jsonMatch[0]);
+          console.log("Parsed via Method 3 (regex extract)");
+        }
+      } catch (e2) {
+        console.error("JSON Parse Error:", e2);
+        console.error("Response was:", responseText);
+        throw new Error(
+          `Failed to parse AI response. Response: ${responseText.substring(
+            0,
+            200
+          )}...`
+        );
+      }
     }
 
-    const analysis = JSON.parse(jsonMatch[0]);
+    // Log what we got
+    console.log("=== PARSED ANALYSIS ===");
+    console.log("jobTitle:", analysis.jobTitle);
+    console.log(
+      "matchScore:",
+      analysis.matchScore,
+      "Type:",
+      typeof analysis.matchScore
+    );
+    console.log(
+      "strengths:",
+      analysis.strengths,
+      "Is Array:",
+      Array.isArray(analysis.strengths)
+    );
+    console.log(
+      "gaps:",
+      analysis.gaps,
+      "Is Array:",
+      Array.isArray(analysis.gaps)
+    );
+    console.log("relevantStories:", analysis.relevantStories);
+    console.log(
+      "recommendation:",
+      analysis.recommendation ? "Present" : "MISSING"
+    );
+    console.log("All keys:", Object.keys(analysis));
+    console.log("======================");
+
+    // Validate the response has required fields
+    if (typeof analysis.matchScore !== "number") {
+      throw new Error(
+        `matchScore is missing or not a number. Got: ${typeof analysis.matchScore}`
+      );
+    }
+    if (!Array.isArray(analysis.strengths)) {
+      throw new Error(
+        `strengths is missing or not an array. Got: ${typeof analysis.strengths}`
+      );
+    }
+    if (!analysis.recommendation) {
+      throw new Error(
+        `recommendation is missing. Got: ${typeof analysis.recommendation}`
+      );
+    }
 
     // Enrich with full story objects
     const relevantStoryIds = analysis.relevantStories || [];
@@ -157,13 +239,13 @@ Please analyze this candidate's fit for the role and provide your assessment in 
     );
 
     const response: IJobAnalysisResponse = {
-      jobTitle: analysis.jobTitle,
+      jobTitle: analysis.jobTitle || jobTitle || "Job Posting",
       matchScore: analysis.matchScore,
       strengths: analysis.strengths,
       gaps: analysis.gaps || [],
       relevantStories: enrichedStories,
       recommendation: analysis.recommendation,
-      jobDescription: jobDescription, // Include the actual description used
+      jobDescription: jobDescription,
     };
 
     return res.status(200).json(response);
