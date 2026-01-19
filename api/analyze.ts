@@ -1,19 +1,20 @@
 /**
  * Vercel Serverless Function: Job Analysis
- * Runtime: Node.js 20.x via @vercel/node@3.2.21
  *
  * This function:
  * 1. Accepts either a job URL or job description text
- * 2. Uses Claude to analyze job fit against resume + stories
- * 3. Returns structured analysis with match score, strengths, gaps, and relevant stories
+ * 2. If URL: scrapes the job posting for title and description
+ * 3. Uses Claude to analyze job fit against resume + stories
+ * 4. Returns structured analysis with match score, strengths, gaps, and relevant stories
  */
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Anthropic from "@anthropic-ai/sdk";
 
-// Import resume and stories (in production, these would be in a database)
+// Import resume and stories
 import { stories, resumeData } from "./lib/data.js";
 import type { IJobAnalysisRequest, IJobAnalysisResponse } from "./lib/types.js";
+import { scrapeJobPosting } from "./lib/scraper.js";
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -21,7 +22,7 @@ const anthropic = new Anthropic({
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Add CORS headers
+  // CORS headers
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
@@ -30,12 +31,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
   );
 
-  // Handle preflight OPTIONS request
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  // Only allow POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -50,35 +49,50 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .json({ error: "Either Job URL or Job Description is required" });
     }
 
-    // Determine job description source
+    // Scrape or use provided description
     let jobDescription: string;
+    let jobTitle: string | undefined;
 
     if (providedJobDescription) {
-      // User provided direct job description text
+      // User provided text directly
       jobDescription = providedJobDescription;
+      jobTitle = undefined; // Claude will extract from text
+    } else if (jobUrl) {
+      // Scrape the job posting
+      try {
+        const scrapedData = await scrapeJobPosting(jobUrl);
+        jobDescription = scrapedData.description;
+        jobTitle = scrapedData.title;
+      } catch (scrapeError) {
+        console.error("Scraping error:", scrapeError);
+        return res.status(400).json({
+          error: "Failed to fetch job posting from URL",
+          details:
+            scrapeError instanceof Error
+              ? scrapeError.message
+              : "Unknown error",
+        });
+      }
     } else {
-      // TODO: Fetch job posting content from URL
-      // For now, we'll use a placeholder
-      jobDescription = `
-        [Job posting content will be fetched from: ${jobUrl}]
-        
-        For testing purposes, using placeholder job description.
-        This would normally be scraped from the provided URL.
-      `;
+      return res
+        .status(400)
+        .json({ error: "Either Job URL or Job Description is required" });
     }
 
-    // Construct the analysis prompt
+    // Build the system prompt
     const systemPrompt = `You are an expert career advisor analyzing job fit. 
 You will be provided with:
 1. A resume
 2. A collection of personal stories demonstrating competencies
-3. A job description
+3. A job description${jobTitle ? " (job title: " + jobTitle + ")" : ""}
 
 Your task is to analyze the candidate's fit for the role and return a structured JSON response.
 
 Response format:
 {
-  "jobTitle": "<extracted job title if clearly identifiable, otherwise omit>",
+  "jobTitle": "${
+    jobTitle || "<extracted job title if clearly identifiable, otherwise omit>"
+  }",
   "matchScore": <number 0-100>,
   "strengths": [<array of specific strengths with examples>],
   "gaps": [<array of skill/experience gaps>],
@@ -116,7 +130,7 @@ Please analyze this candidate's fit for the role and provide your assessment in 
     const responseText =
       message.content[0].type === "text" ? message.content[0].text : "";
 
-    // Extract JSON from response (Claude might wrap it in markdown)
+    // Extract JSON (Claude might wrap it in markdown)
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error("Failed to parse AI response");
