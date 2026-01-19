@@ -31,6 +31,7 @@ export interface IJobAnalysisResponse {
   relevantStories: IStory[];
   recommendation: string;
   reasoning?: string; // Optional: Claude's extended thinking
+  jobDescription?: string;
 }
 
 export interface IAnalysisState {

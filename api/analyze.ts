@@ -52,6 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Scrape or use provided description
     let jobDescription: string;
     let jobTitle: string | undefined;
+    let scrapedData: any = null;
 
     if (providedJobDescription) {
       // User provided text directly
@@ -60,9 +61,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else if (jobUrl) {
       // Scrape the job posting
       try {
-        const scrapedData = await scrapeJobPosting(jobUrl);
+        scrapedData = await scrapeJobPosting(jobUrl);
         jobDescription = scrapedData.description;
         jobTitle = scrapedData.title;
+
+        // Debug logging
+        console.log("=== SCRAPED DATA ===");
+        console.log("URL:", scrapedData.url);
+        console.log("Title:", scrapedData.title);
+        console.log("Description length:", scrapedData.description.length);
+        console.log(
+          "Description preview:",
+          scrapedData.description.substring(0, 500)
+        );
+        console.log("===================");
       } catch (scrapeError) {
         console.error("Scraping error:", scrapeError);
         return res.status(400).json({
@@ -151,6 +163,7 @@ Please analyze this candidate's fit for the role and provide your assessment in 
       gaps: analysis.gaps || [],
       relevantStories: enrichedStories,
       recommendation: analysis.recommendation,
+      jobDescription: jobDescription, // Include the actual description used
     };
 
     return res.status(200).json(response);

@@ -34,7 +34,7 @@ import {
   Mail20Regular,
   ShareAndroid20Regular,
 } from "@fluentui/react-icons";
-import { apiUrl } from "@/constants/env";
+import { apiUrl, isDebugMode } from "@/constants";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
 import type { IJobAnalysisRequest, IAnalysisState } from "@/types";
 import { useStyles } from "./Home.styles";
@@ -89,6 +89,20 @@ function Home() {
       }
 
       const data = await response.json();
+
+      // DEBUG LOGGING
+      if (isDebugMode) {
+        console.log("=== ANALYSIS RESPONSE ===");
+        console.log("Job Title:", data.jobTitle);
+        console.log("Match Score:", data.matchScore);
+        console.log("Job Description Length:", data.jobDescription?.length);
+        console.log(
+          "Job Description Preview:",
+          data.jobDescription?.substring(0, 500)
+        );
+        console.log("========================");
+      }
+
       setAnalysisState({ status: "complete", data, error: null });
     } catch (error) {
       setAnalysisState({

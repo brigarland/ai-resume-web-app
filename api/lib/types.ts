@@ -27,4 +27,5 @@ export interface IJobAnalysisResponse {
   relevantStories: IStory[];
   recommendation: string;
   reasoning?: string;
+  jobDescription?: string;
 }
