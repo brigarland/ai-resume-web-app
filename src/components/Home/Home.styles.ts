@@ -315,6 +315,7 @@ export const useStyles = makeStyles({
 
   scoreLabel: {
     fontSize: "14px",
+    lineHeight: "0.2",
     color: tokens.colorNeutralForeground2,
     textTransform: "uppercase",
     letterSpacing: "0.5px",
@@ -322,7 +323,6 @@ export const useStyles = makeStyles({
   },
 
   scoreSubtitleContainer: {
-    marginTop: "8px",
     display: "flex",
     alignItems: "center",
     ...shorthands.gap("6px"),
