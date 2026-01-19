@@ -92,7 +92,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Build the system prompt with strict JSON instruction
-    const systemPrompt = `You are an expert career advisor analyzing job fit. 
+    const systemPrompt = `You are an expert career advisor analyzing job fit for Brian Garland. 
 
 IMPORTANT: You must respond with ONLY valid JSON. No explanatory text before or after. Just the JSON object.
 
@@ -118,7 +118,7 @@ Rules:
 - gaps must be an array of strings
 - relevantStories must be an array of story IDs from the provided stories
 - relevantSkills must be an array of 6-12 skill objects selected from the resume's skills list that are most relevant to this job. Keep the original rating values from the resume.
-- recommendation must be a string`;
+- recommendation must be a string written in third person, referring to the candidate as "Brian" (e.g., "Brian has excellent skills..." instead of "You have excellent skills...")`;
 
     const userPrompt = `# Resume
 ${resumeData.fullText}
