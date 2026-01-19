@@ -243,7 +243,8 @@ export const useStyles = makeStyles({
   },
 
   scoreCardHeader: {
-    marginBottom: "24px",
+    marginBottom: "16px",
+    textAlign: "center",
   },
 
   scoreCardTitle: {
@@ -251,9 +252,16 @@ export const useStyles = makeStyles({
   },
 
   shareButtons: {
+    marginTop: "8px",
     display: "flex",
     ...shorthands.gap("8px"),
     flexWrap: "wrap",
+  },
+
+  shareButton: {
+    flex: "1",
+    display: "flex",
+    justifyContent: "center",
   },
 
   scoreGauge: {
@@ -343,7 +351,7 @@ export const useStyles = makeStyles({
   },
 
   skillsTitle: {
-    marginBottom: "24px",
+    marginBottom: "12px",
     textAlign: "center",
   },
 
@@ -399,7 +407,7 @@ export const useStyles = makeStyles({
   },
 
   sectionTitle: {
-    marginBottom: "16px",
+    marginBottom: "8px",
     display: "flex",
     alignItems: "center",
     ...shorthands.gap("8px"),
@@ -407,7 +415,7 @@ export const useStyles = makeStyles({
 
   list: {
     ...shorthands.margin(0),
-    paddingLeft: "24px",
+    paddingLeft: "32px",
   },
 
   listItem: {
@@ -432,7 +440,7 @@ export const useStyles = makeStyles({
     display: "flex",
     flexWrap: "wrap",
     ...shorthands.gap("8px"),
-    marginTop: "16px",
+    marginTop: "8px",
   },
 
   // Recommendation Section

@@ -353,32 +353,38 @@ function Home() {
                     </Title3>
                   )}
                   <div className={styles.shareButtons}>
-                    <Button
-                      appearance="subtle"
-                      size="small"
-                      icon={<Link20Regular />}
-                      onClick={handleCopyLink}
-                    >
-                      Copy Link
-                    </Button>
-                    <Button
-                      appearance="subtle"
-                      size="small"
-                      icon={<Mail20Regular />}
-                      onClick={handleShareEmail}
-                    >
-                      Email
-                    </Button>
                     {nativeShareAvailable && (
+                      <div className={styles.shareButton}>
+                        <Button
+                          appearance="subtle"
+                          size="small"
+                          icon={<ShareAndroid20Regular />}
+                          onClick={handleNativeShare}
+                        >
+                          Share
+                        </Button>
+                      </div>
+                    )}
+                    <div className={styles.shareButton}>
                       <Button
                         appearance="subtle"
                         size="small"
-                        icon={<ShareAndroid20Regular />}
-                        onClick={handleNativeShare}
+                        icon={<Link20Regular />}
+                        onClick={handleCopyLink}
                       >
-                        Share
+                        Copy Link
                       </Button>
-                    )}
+                    </div>
+                    <div className={styles.shareButton}>
+                      <Button
+                        appearance="subtle"
+                        size="small"
+                        icon={<Mail20Regular />}
+                        onClick={handleShareEmail}
+                      >
+                        Email
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
@@ -521,10 +527,8 @@ function Home() {
                 </div>
                 {analysisState.data.relevantStories.map((story) => (
                   <Card key={story.id} className={styles.storyCard}>
-                    <CardHeader
-                      header={<Title3>{story.title}</Title3>}
-                      description={<Body1>{story.context}</Body1>}
-                    />
+                    <CardHeader header={<Title3>{story.title}</Title3>} />
+                    <Body1>{story.context}</Body1>
                     <div className={styles.storySkills}>
                       {story.skills.map((skill, i) => (
                         <Badge key={i} appearance="outline" color="informative">
