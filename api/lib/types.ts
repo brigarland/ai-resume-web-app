@@ -1,3 +1,10 @@
+export type TSkillRating = 1 | 2 | 3 | 4 | 5;
+
+export interface ISkill {
+  value: string;
+  rating: TSkillRating;
+}
+
 export interface IStory {
   id: string;
   title: string;
@@ -9,7 +16,7 @@ export interface IStory {
 
 export interface IResumeData {
   fullText: string;
-  skills: string[];
+  skills: ISkill[];
   experience: string[];
   education: string[];
 }
@@ -25,6 +32,7 @@ export interface IJobAnalysisResponse {
   strengths: string[];
   gaps: string[];
   relevantStories: IStory[];
+  relevantSkills: ISkill[];
   recommendation: string;
   reasoning?: string;
   jobDescription?: string;

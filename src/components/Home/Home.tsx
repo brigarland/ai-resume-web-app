@@ -34,6 +34,7 @@ import {
   Mail20Regular,
   ShareAndroid20Regular,
 } from "@fluentui/react-icons";
+import { SkillBadge } from "@/components/SkillBadge";
 import { apiUrl, isDebugMode } from "@/constants";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
 import type { IJobAnalysisRequest, IAnalysisState } from "@/types";
@@ -438,28 +439,8 @@ function Home() {
               <Card className={styles.skillsCard}>
                 <Title3 className={styles.skillsTitle}>Relevant Skills</Title3>
                 <div className={styles.skillsCloud}>
-                  {[
-                    "React",
-                    "TypeScript",
-                    "JavaScript",
-                    "Azure",
-                    "C#",
-                    "Python",
-                    "Agile",
-                    "UI/UX Design",
-                    "Fluent UI",
-                    "Data Visualization",
-                    "RESTful APIs",
-                    "SQL",
-                  ].map((skill, i) => (
-                    <Badge
-                      key={i}
-                      appearance="filled"
-                      color="brand"
-                      size="large"
-                    >
-                      {skill}
-                    </Badge>
+                  {analysisState.data.relevantSkills?.map((skill, i) => (
+                    <SkillBadge key={i} skill={skill} />
                   ))}
                 </div>
               </Card>
@@ -545,7 +526,7 @@ function Home() {
 
       <footer className={styles.footer}>
         <Caption1>
-          Built by Brian Garland Ã¢â‚¬Â¢ Portfolio project demonstrating AI
+          Built by Brian Garland | Portfolio project demonstrating AI
           integration
         </Caption1>
         <br />

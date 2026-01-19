@@ -97,7 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 IMPORTANT: You must respond with ONLY valid JSON. No explanatory text before or after. Just the JSON object.
 
 You will be provided with:
-1. A resume
+1. A resume with a list of skills (each skill has a value and rating 1-5)
 2. A collection of personal stories demonstrating competencies
 3. A job description${jobTitle ? " (job title: " + jobTitle + ")" : ""}
 
@@ -108,6 +108,7 @@ Return this exact JSON structure:
   "strengths": ["strength 1", "strength 2", "strength 3"],
   "gaps": ["gap 1", "gap 2"],
   "relevantStories": ["story-001", "story-002"],
+  "relevantSkills": [{"value": "React", "rating": 5}, {"value": "TypeScript", "rating": 4}],
   "recommendation": "Your overall recommendation here"
 }
 
@@ -116,10 +117,14 @@ Rules:
 - strengths must be an array of strings
 - gaps must be an array of strings
 - relevantStories must be an array of story IDs from the provided stories
+- relevantSkills must be an array of 6-12 skill objects selected from the resume's skills list that are most relevant to this job. Keep the original rating values from the resume.
 - recommendation must be a string`;
 
     const userPrompt = `# Resume
 ${resumeData.fullText}
+
+# Skills (with ratings 1-5)
+${JSON.stringify(resumeData.skills, null, 2)}
 
 # Personal Stories
 ${JSON.stringify(stories, null, 2)}
@@ -244,6 +249,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
       strengths: analysis.strengths,
       gaps: analysis.gaps || [],
       relevantStories: enrichedStories,
+      relevantSkills: analysis.relevantSkills || [],
       recommendation: analysis.recommendation,
       jobDescription: jobDescription,
     };
