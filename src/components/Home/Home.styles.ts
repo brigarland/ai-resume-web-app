@@ -449,7 +449,7 @@ export const useStyles = makeStyles({
   },
 
   recommendationCard: {
-    backgroundColor: tokens.colorBrandBackground2,
+    backgroundColor: tokens.colorNeutralBackground1,
     ...shorthands.padding("24px"),
     boxShadow: tokens.shadow4,
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
