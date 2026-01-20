@@ -554,40 +554,43 @@ function Home() {
                       {analysisState.data.jobTitle}
                     </Title3>
                   )}
-                  <div className={styles.shareButtons}>
-                    {nativeShareAvailable && (
+                  {analyzingJobUrl && (
+                    <div className={styles.shareButtons}>
+                      {nativeShareAvailable && (
+                        <div className={styles.shareButton}>
+                          <Button
+                            appearance="subtle"
+                            size="small"
+                            icon={<ShareAndroid20Regular />}
+                            onClick={handleNativeShare}
+                          >
+                            Share
+                          </Button>
+                        </div>
+                      )}
                       <div className={styles.shareButton}>
                         <Button
                           appearance="subtle"
                           size="small"
-                          icon={<ShareAndroid20Regular />}
-                          onClick={handleNativeShare}
+                          icon={<Link20Regular />}
+                          onClick={handleCopyLink}
                         >
-                          Share
+                          Copy Link
                         </Button>
                       </div>
-                    )}
-                    <div className={styles.shareButton}>
-                      <Button
-                        appearance="subtle"
-                        size="small"
-                        icon={<Link20Regular />}
-                        onClick={handleCopyLink}
-                      >
-                        Copy Link
-                      </Button>
+                      <div className={styles.shareButton}>
+                        <Button
+                          appearance="subtle"
+                          size="small"
+                          icon={<Mail20Regular />}
+                          onClick={handleShareEmail}
+                        >
+                          Email
+                        </Button>
+                      </div>
                     </div>
-                    <div className={styles.shareButton}>
-                      <Button
-                        appearance="subtle"
-                        size="small"
-                        icon={<Mail20Regular />}
-                        onClick={handleShareEmail}
-                      >
-                        Email
-                      </Button>
-                    </div>
-                  </div>
+                  )}
+                  ;
                 </div>
 
                 <div className={styles.scoreGauge}>
