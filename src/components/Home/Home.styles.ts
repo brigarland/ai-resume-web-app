@@ -613,6 +613,39 @@ export const useStyles = makeStyles({
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
   },
 
+  // Error View
+  errorView: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    ...shorthands.padding("64px", "32px"),
+    minHeight: "400px",
+  },
+
+  errorIcon: {
+    fontSize: "64px",
+    color: tokens.colorNeutralForeground3,
+    marginBottom: "24px",
+  },
+
+  errorTitle: {
+    color: tokens.colorNeutralForeground2,
+    marginBottom: "16px",
+  },
+
+  errorMessage: {
+    color: tokens.colorNeutralForeground3,
+    textAlign: "center",
+    maxWidth: "600px",
+    marginBottom: "24px",
+  },
+
+  errorHelp: {
+    maxWidth: "700px",
+  },
+
   // Footer
   footer: {
     textAlign: "center",

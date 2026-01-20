@@ -47,4 +47,5 @@ export interface IAnalysisState {
   status: "idle" | "loading" | "streaming" | "complete" | "error";
   data: IJobAnalysisResponse | null;
   error: string | null;
+  errorType?: string;
 }

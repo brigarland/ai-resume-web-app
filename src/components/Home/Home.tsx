@@ -57,6 +57,7 @@ function Home() {
     status: "idle",
     data: null,
     error: null,
+    errorType: undefined,
   });
   const [autoLoaded, setAutoLoaded] = useState(false);
   const [analyzingJobUrl, setAnalyzingJobUrl] = useState<string>("");
@@ -78,7 +79,12 @@ function Home() {
 
     // Save the URL being analyzed (or clear if using description)
     setAnalyzingJobUrl(urlToAnalyze || "");
-    setAnalysisState({ status: "loading", data: null, error: null });
+    setAnalysisState({
+      status: "loading",
+      data: null,
+      error: null,
+      errorType: undefined,
+    });
 
     try {
       const requestBody: IJobAnalysisRequest = urlToAnalyze
@@ -94,7 +100,12 @@ function Home() {
       });
 
       if (!response.ok) {
-        throw new Error("Analysis failed");
+        const errorData = await response.json();
+        const errorType = errorData.error || "Analysis failed";
+        const errorDetails = errorData.details || "";
+
+        // Throw with combined message that includes type
+        throw new Error(`${errorType}|||${errorDetails}`);
       }
 
       const data = await response.json();
@@ -112,12 +123,22 @@ function Home() {
         console.log("========================");
       }
 
-      setAnalysisState({ status: "complete", data, error: null });
+      setAnalysisState({
+        status: "complete",
+        data,
+        error: null,
+        errorType: undefined,
+      });
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      const [errorType, errorDetails] = errorMessage.split("|||");
+
       setAnalysisState({
         status: "error",
         data: null,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: errorDetails || errorType,
+        errorType: errorDetails ? errorType : undefined,
       });
     }
   };
@@ -474,6 +495,49 @@ function Home() {
 
       <main className={styles.main}>
         <div className={styles.contentGrid}>
+          {/* Error View for Invalid Job Description */}
+          {analysisState.status === "error" &&
+            analysisState.errorType === "INVALID_JOB_DESCRIPTION" && (
+              <Card
+                style={{
+                  gridColumn: "1 / -1",
+                }}
+              >
+                <div className={styles.errorView}>
+                  <Warning24Regular className={styles.errorIcon} />
+                  <Title2 className={styles.errorTitle}>
+                    Unable to Scrape Job Description
+                  </Title2>
+                  <Body1 className={styles.errorMessage}>
+                    Sorry, we were unable to scrape a valid job description from{" "}
+                    <a
+                      href={analyzingJobUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: tokens.colorBrandForeground1,
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {analyzingJobUrl}
+                    </a>
+                    .
+                  </Body1>
+                  <MessageBar intent="info" className={styles.errorHelp}>
+                    <MessageBarBody>
+                      <strong>For best results:</strong> Be sure to use a job
+                      listing/posting with its own URL, not just a page that is
+                      a listing of many jobs opening a panel to view the one you
+                      selected. In that scenario, the URL alone is not enough
+                      info to scrape the information for that specific job, but
+                      in most cases panel job listings have a link to view the
+                      job posting on its own standalone page and URL.
+                    </MessageBarBody>
+                  </MessageBar>
+                </div>
+              </Card>
+            )}
+
           {/* Left Column: Score + Skills */}
           {analysisState.status === "complete" && analysisState.data && (
             <div className={styles.leftColumn}>

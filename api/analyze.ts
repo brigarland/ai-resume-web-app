@@ -81,12 +81,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.log("===================");
       } catch (scrapeError) {
         console.error("Scraping error:", scrapeError);
+
+        // Check if this is an invalid job description error
+        const errorMessage =
+          scrapeError instanceof Error ? scrapeError.message : "Unknown error";
+        const isInvalidJobDescription = errorMessage.includes(
+          "INVALID_JOB_DESCRIPTION"
+        );
+
         return res.status(400).json({
-          error: "Failed to fetch job posting from URL",
-          details:
-            scrapeError instanceof Error
-              ? scrapeError.message
-              : "Unknown error",
+          error: isInvalidJobDescription
+            ? "INVALID_JOB_DESCRIPTION"
+            : "Failed to fetch job posting from URL",
+          details: errorMessage.replace("INVALID_JOB_DESCRIPTION: ", ""),
         });
       }
     } else {
@@ -239,6 +246,29 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
       throw new Error(
         `recommendation is missing. Got: ${typeof analysis.recommendation}`
       );
+    }
+
+    // Check if Claude detected an invalid job description
+    const invalidJobDescriptionIndicators = [
+      "without a valid job description",
+      "not a valid job description",
+      "sign-in page",
+      "login page",
+      "appears to be a",
+      "doesn't appear to be a job",
+    ];
+    const recommendationLower = analysis.recommendation.toLowerCase();
+    const seemsInvalid = invalidJobDescriptionIndicators.some((indicator) =>
+      recommendationLower.includes(indicator)
+    );
+
+    if (seemsInvalid || analysis.matchScore < 10) {
+      return res.status(400).json({
+        error: "INVALID_JOB_DESCRIPTION",
+        message:
+          "Unable to extract a valid job description from the provided URL",
+        details: analysis.recommendation,
+      });
     }
 
     // Enrich with full story objects
