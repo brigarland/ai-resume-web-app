@@ -7,7 +7,7 @@ import type { IStory, IResumeData } from "./types";
 export const stories: IStory[] = [
   {
     id: "story-001",
-    title: "Museum Live Animal Presentations",
+    title: "Live Animal Presentations",
     icon: "frog",
     context:
       "Volunteered at natural history museum in high school, delivering live animal presentations to diverse audiences (children and adults) focused on conservation and education.",
@@ -27,7 +27,7 @@ export const stories: IStory[] = [
   },
   {
     id: "story-002",
-    title: "Office UI Fabric React Contribution",
+    title: "Fluent UI Contribution",
     icon: "github",
     context:
       "During Microsoft contract, contributed to Office UI Fabric React (now Fluent UI), an open-source TypeScript framework with 180K+ weekly downloads. Organized triage of 500+ GitHub issues and implemented automated testing pipelines.",
@@ -48,7 +48,7 @@ export const stories: IStory[] = [
   },
   {
     id: "story-003",
-    title: "Training Video Production Career Foundation",
+    title: "Training Video Production",
     icon: "video",
     context:
       "Career in technical communication began with producing an award-winning public service announcement for Willie Nelson's Hepatitis C awareness campaign, followed by creating training videos for the American Heart Association and Alaska State Troopers. This foundation in translating complex information into accessible visual content evolved throughout career into software documentation, technical training materials, and most importantly, effective human-centered communication in technology environments. The core skill remains constant: understanding the audience, breaking down complexity, and delivering information in the most digestible format.",
@@ -71,7 +71,7 @@ export const stories: IStory[] = [
   },
   {
     id: "story-004",
-    title: "Mt. Rainier Summit: Breaking Down Impossible Challenges",
+    title: "Summiting Mt. Rainier",
     icon: "mountain",
     context:
       "When faced with summiting Mt. Rainier and feeling overwhelmed by the enormity of the challenge, a guide shared transformative advice: don't look up at the peak, just focus on taking the next single step. Can you take one more step? Of course. Then do it. And again. And again. This experience fundamentally changed approach to daunting challenges, embodying principles later recognized as Stoic philosophy - focus only on what you can control in this moment, break overwhelming problems into manageable actions, and trust that consistent small steps lead to remarkable outcomes. This mindset has been applied throughout career when facing complex technical projects, tight deadlines, and seemingly impossible requirements.",

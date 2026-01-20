@@ -716,18 +716,20 @@ function Home() {
                           <div
                             style={{
                               display: "flex",
-                              alignItems: "center",
+                              alignItems: "flex-start",
                               gap: "12px",
                             }}
                           >
+                            <Title3 style={{ flex: 1 }}>{story.title}</Title3>
                             <FontAwesomeIcon
                               icon={getStoryIcon(story.icon)}
                               style={{
-                                fontSize: "20px",
+                                marginTop: "4px",
+                                fontSize: "28px",
                                 color: tokens.colorBrandForeground1,
+                                flexShrink: 0,
                               }}
                             />
-                            <Title3>{story.title}</Title3>
                           </div>
                         }
                       />
