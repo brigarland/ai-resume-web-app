@@ -13,28 +13,80 @@ export interface IScrapedJobPosting {
 }
 
 /**
+ * Normalize URL to ensure it has a protocol
+ */
+function normalizeUrl(url: string): string {
+  const trimmed = url.trim();
+
+  // If URL already has a protocol, return as-is
+  if (trimmed.match(/^https?:\/\//i)) {
+    return trimmed;
+  }
+
+  // Add https:// if missing
+  return `https://${trimmed}`;
+}
+
+/**
  * Fetch and parse a job posting from a URL
  */
 export async function scrapeJobPosting(
   url: string
 ): Promise<IScrapedJobPosting> {
   try {
-    const response = await fetch(url, {
+    // Normalize the URL to ensure it has a protocol
+    const normalizedUrl = normalizeUrl(url);
+
+    // Validate URL format
+    try {
+      new URL(normalizedUrl);
+    } catch (urlError) {
+      throw new Error(`Invalid URL format: ${url}`);
+    }
+
+    const response = await fetch(normalizedUrl, {
       headers: {
         "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        Referer: "https://www.google.com/",
+        DNT: "1",
+        Connection: "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-User": "?1",
+        "Cache-Control": "max-age=0",
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.status}`);
+      // Handle common bot detection / access denied status codes
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(
+          `BOT_DETECTED: The website blocked our request (${response.status} ${response.statusText}). This site does not allow automated scraping. Try copying the job description directly instead.`
+        );
+      }
+      // 429 = Rate limited
+      if (response.status === 429) {
+        throw new Error(
+          `BOT_DETECTED: Too many requests (429). This site has rate limiting. Try copying the job description directly instead.`
+        );
+      }
+      throw new Error(
+        `Failed to fetch URL: ${response.status} ${response.statusText}`
+      );
     }
 
     const html = await response.text();
     const $ = cheerio.load(html);
 
     // PRIORITY 1: Try JSON-LD structured data (cleanest approach)
-    const jsonLdData = extractFromJsonLd($);
+    const jsonLdData = extractFromJsonLd($, normalizedUrl);
     if (jsonLdData) {
       console.log("Using JSON-LD structured data");
       return jsonLdData;
@@ -45,7 +97,7 @@ export async function scrapeJobPosting(
     const title = extractJobTitle($);
     const description = extractJobDescription($);
 
-    return { title, description, url };
+    return { title, description, url: normalizedUrl };
   } catch (error) {
     throw new Error(
       `Scraping failed: ${
@@ -59,7 +111,10 @@ export async function scrapeJobPosting(
  * Extract job data from JSON-LD structured data (schema.org JobPosting)
  * This is the cleanest method - many sites include this metadata
  */
-function extractFromJsonLd($: cheerio.CheerioAPI): IScrapedJobPosting | null {
+function extractFromJsonLd(
+  $: cheerio.CheerioAPI,
+  normalizedUrl: string
+): IScrapedJobPosting | null {
   const jsonLdScripts = $('script[type="application/ld+json"]');
 
   for (let i = 0; i < jsonLdScripts.length; i++) {
@@ -73,7 +128,8 @@ function extractFromJsonLd($: cheerio.CheerioAPI): IScrapedJobPosting | null {
       if (data["@type"] === "JobPosting") {
         const title = data.title || "Job Posting";
         const description = data.description || "";
-        const url = data.url || "";
+        // Use the job's own URL if available, otherwise use the normalized fetched URL
+        const url = data.url || normalizedUrl;
         const hiringOrganization = data.hiringOrganization?.name || undefined;
 
         if (description.length > 0) {

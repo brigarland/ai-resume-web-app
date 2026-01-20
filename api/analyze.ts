@@ -82,18 +82,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } catch (scrapeError) {
         console.error("Scraping error:", scrapeError);
 
-        // Check if this is an invalid job description error
+        // Check error type
         const errorMessage =
           scrapeError instanceof Error ? scrapeError.message : "Unknown error";
         const isInvalidJobDescription = errorMessage.includes(
           "INVALID_JOB_DESCRIPTION"
         );
+        const isBotDetected = errorMessage.includes("BOT_DETECTED");
+
+        // Determine error type and message
+        let errorType = "Failed to fetch job posting from URL";
+        if (isInvalidJobDescription) {
+          errorType = "INVALID_JOB_DESCRIPTION";
+        } else if (isBotDetected) {
+          errorType = "BOT_DETECTED";
+        }
 
         return res.status(400).json({
-          error: isInvalidJobDescription
-            ? "INVALID_JOB_DESCRIPTION"
-            : "Failed to fetch job posting from URL",
-          details: errorMessage.replace("INVALID_JOB_DESCRIPTION: ", ""),
+          error: errorType,
+          details: errorMessage
+            .replace("INVALID_JOB_DESCRIPTION: ", "")
+            .replace("BOT_DETECTED: ", ""),
         });
       }
     } else {

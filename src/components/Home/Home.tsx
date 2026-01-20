@@ -495,6 +495,35 @@ function Home() {
 
       <main className={styles.main}>
         <div className={styles.contentGrid}>
+          {/* Error View for Bot Detection */}
+          {analysisState.status === "error" &&
+            analysisState.errorType === "BOT_DETECTED" && (
+              <Card
+                style={{
+                  gridColumn: "1 / -1",
+                }}
+              >
+                <div className={styles.errorView}>
+                  <Warning24Regular className={styles.errorIcon} />
+                  <Title2 className={styles.errorTitle}>
+                    Website Blocked Our Request
+                  </Title2>
+                  <Body1 className={styles.errorMessage}>
+                    {analysisState.error}
+                  </Body1>
+                  <MessageBar intent="info" className={styles.errorHelp}>
+                    <MessageBarBody>
+                      <strong>Solution:</strong> Many job boards (like Indeed,
+                      LinkedIn, Glassdoor) block automated scrapers. Instead of
+                      pasting the URL, try switching to the "Job Description"
+                      tab above and copy-paste the job posting text directly
+                      from the website.
+                    </MessageBarBody>
+                  </MessageBar>
+                </div>
+              </Card>
+            )}
+
           {/* Error View for Invalid Job Description */}
           {analysisState.status === "error" &&
             analysisState.errorType === "INVALID_JOB_DESCRIPTION" && (
