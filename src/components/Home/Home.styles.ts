@@ -247,6 +247,16 @@ export const useStyles = makeStyles({
     textAlign: "center",
   },
 
+  scoreCardOrgHeader: {
+    textAlign: "center",
+    marginBottom: "4px",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "1.5px",
+    color: tokens.colorNeutralForeground2,
+    display: "block",
+  },
+
   scoreCardTitle: {
     marginBottom: "12px",
   },

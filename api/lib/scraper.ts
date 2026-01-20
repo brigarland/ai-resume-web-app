@@ -9,6 +9,7 @@ export interface IScrapedJobPosting {
   title: string;
   description: string;
   url: string;
+  hiringOrganization?: string;
 }
 
 /**
@@ -73,9 +74,10 @@ function extractFromJsonLd($: cheerio.CheerioAPI): IScrapedJobPosting | null {
         const title = data.title || "Job Posting";
         const description = data.description || "";
         const url = data.url || "";
+        const hiringOrganization = data.hiringOrganization?.name || undefined;
 
         if (description.length > 0) {
-          return { title, description, url };
+          return { title, description, url, hiringOrganization };
         }
       }
     } catch (e) {

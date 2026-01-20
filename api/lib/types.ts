@@ -28,6 +28,7 @@ export interface IJobAnalysisRequest {
 
 export interface IJobAnalysisResponse {
   jobTitle?: string;
+  hiringOrganization?: string;
   matchScore: number;
   strengths: string[];
   gaps: string[];

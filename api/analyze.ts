@@ -52,23 +52,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Scrape or use provided description
     let jobDescription: string;
     let jobTitle: string | undefined;
+    let hiringOrganization: string | undefined;
     let scrapedData: any = null;
 
     if (providedJobDescription) {
       // User provided text directly
       jobDescription = providedJobDescription;
       jobTitle = undefined; // Claude will extract from text
+      hiringOrganization = undefined;
     } else if (jobUrl) {
       // Scrape the job posting
       try {
         scrapedData = await scrapeJobPosting(jobUrl);
         jobDescription = scrapedData.description;
         jobTitle = scrapedData.title;
+        hiringOrganization = scrapedData.hiringOrganization;
 
         // Debug logging
         console.log("=== SCRAPED DATA ===");
         console.log("URL:", scrapedData.url);
         console.log("Title:", scrapedData.title);
+        console.log("Hiring Org:", scrapedData.hiringOrganization);
         console.log("Description length:", scrapedData.description.length);
         console.log(
           "Description preview:",
@@ -245,6 +249,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
 
     const response: IJobAnalysisResponse = {
       jobTitle: analysis.jobTitle || jobTitle || "Job Posting",
+      hiringOrganization: hiringOrganization,
       matchScore: analysis.matchScore,
       strengths: analysis.strengths,
       gaps: analysis.gaps || [],

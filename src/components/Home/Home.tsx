@@ -348,6 +348,11 @@ function Home() {
               <Card className={styles.scoreCard}>
                 {/* Header with Job Title and Share Buttons */}
                 <div className={styles.scoreCardHeader}>
+                  {analysisState.data.hiringOrganization && (
+                    <Caption1 className={styles.scoreCardOrgHeader}>
+                      {analysisState.data.hiringOrganization}
+                    </Caption1>
+                  )}
                   {analysisState.data.jobTitle && (
                     <Title3 className={styles.scoreCardTitle}>
                       {analysisState.data.jobTitle}
