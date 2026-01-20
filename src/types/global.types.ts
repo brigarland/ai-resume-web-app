@@ -15,7 +15,8 @@ export interface IStory {
   context: string;
   skills: string[];
   outcomes: string[];
-  categories: string[]; // e.g., ["leadership", "technical", "communication"]
+  categories: string[];
+  icon: string;
 }
 
 export interface IResumeData {

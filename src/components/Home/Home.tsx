@@ -25,7 +25,6 @@ import {
   ChartMultiple24Regular,
   Checkmark24Regular,
   Warning24Regular,
-  Book24Regular,
   Link24Regular,
   Mail24Regular,
   Location24Regular,
@@ -39,6 +38,7 @@ import {
   CodeCircle20Regular,
   ArrowDownload20Regular,
 } from "@fluentui/react-icons";
+import { getStoryIcon } from "@/utils";
 import { SkillBadge } from "@/components/SkillBadge";
 import { apiUrl, isDebugMode } from "@/constants";
 import bgAvatarImg from "@/assets/brian-garland-headshot.jpeg";
@@ -709,13 +709,28 @@ function Home() {
               {/* Right Column: Relevant Stories */}
               {analysisState.data.relevantStories.length > 0 && (
                 <div className={styles.rightColumn}>
-                  <div className={styles.sectionTitle}>
-                    <Book24Regular color={tokens.colorBrandForeground1} />
-                    <Title3>Relevant Experience Stories</Title3>
-                  </div>
                   {analysisState.data.relevantStories.map((story) => (
                     <Card key={story.id} className={styles.storyCard}>
-                      <CardHeader header={<Title3>{story.title}</Title3>} />
+                      <CardHeader
+                        header={
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              icon={getStoryIcon(story.icon)}
+                              style={{
+                                fontSize: "20px",
+                                color: tokens.colorBrandForeground1,
+                              }}
+                            />
+                            <Title3>{story.title}</Title3>
+                          </div>
+                        }
+                      />
                       <Body1>{story.context}</Body1>
                       <div className={styles.storySkills}>
                         {story.skills.map((skill, i) => (

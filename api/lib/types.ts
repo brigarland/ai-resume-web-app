@@ -12,6 +12,7 @@ export interface IStory {
   skills: string[];
   outcomes: string[];
   categories: string[];
+  icon: string;
 }
 
 export interface IResumeData {
