@@ -28,7 +28,7 @@ export const stories: IStory[] = [
     id: "story-002",
     title: "Office UI Fabric React Contribution",
     context:
-      "During Microsoft contract, contributed to Office UI Fabric React (now Fluent UI), an open-source TypeScript framework with 1M+ weekly downloads. Organized triage of 500+ GitHub issues and implemented automated testing pipelines.",
+      "During Microsoft contract, contributed to Office UI Fabric React (now Fluent UI), an open-source TypeScript framework with 180K+ weekly downloads. Organized triage of 500+ GitHub issues and implemented automated testing pipelines.",
     skills: [
       "open source contribution",
       "TypeScript",
@@ -52,77 +52,91 @@ export const stories: IStory[] = [
 export const resumeData: IResumeData = {
   fullText: `
 BRIAN GARLAND
-Bellevue, WA 98005 | 256.453.2749 | bri.garland@gmail.com
+AI Prototype Technologist
 
-TECHNOLOGY EXPERTISE
+Innovative technologist specializing in rapid AI prototyping and user-centered design. Expert in leveraging GenAI and modern web frameworks to transform concepts into production-ready applications. Proven track record leading development teams at Fortune 500 clients, with deep expertise in React and TypeScript. Passionate about bridging the gap between cutting-edge AI capabilities and intuitive user experiences.
 
-Web Development
-React • TypeScript • JavaScript • HTML5/CSS3 • Sass/SCSS • RESTful APIs • SQL • Azure • Webpack
+CONTACT
+Email: bri.garland@gmail.com
+AI Portfolio App: brigarland.com
+Location: Seattle, WA
 
-Methodologies & Practices
-Agile (Scrum & Kanban) • User Experience Design • Project Management • SEO • E-Commerce
+TECH EXPERTISE
+• React
+• TypeScript
+• Fluent UI
+• GenAI
+• JavaScript
+• UX Design
+• Azure
+• Python
+• Agile (Scrum & Kanban)
 
-Data Visualization
-KeyLines • Highcharts • D3
+EMPLOYMENT HISTORY
 
-Software Development & Tools
-Python • C#/C++ • Bash/Shell • Fluent UI / Office UI Fabric React • Figma • Photoshop • DaVinci Resolve
+UX Software Engineer, Lead | September 2018 - January 2026
+Blueprint Technologies
 
-EXPERIENCE
-
-Blueprint Consulting Services | Seattle, WA
-UX Software Engineer, Lead | September 2018 - Present
-React • TypeScript • JavaScript • C# • Azure • GenAI
-
-- Lead development teams building cutting-edge data visualization and GenAI applications for Fortune 500 clients, managing full project lifecycle from ideation through production release
+- Lead development teams building cutting edge visualization and GenAI applications for Fortune 500 clients, managing full project lifecycle from ideation through production release
 - Architect and implement customer-facing UI/UX solutions using React, Fluent UI, and C# APIs integrated with Databricks and Azure services
+- Leverage AI acceleration tools and GenAI capabilities to rapidly prototype and deploy production-ready applications, reducing development cycles while maintaining high quality standards
 - Drive innovation by conducting user research, collecting feedback, and iterating on experimental concepts to deliver maximum business impact
 - Mentor development teams and provide technical guidance throughout the development cycle, improving team cohesion and productivity
 - Serve as SME providing strategic recommendations when technical constraints or deadlines require solution pivots
 - Create software training videos and documentation to facilitate user onboarding and product adoption
 
-Microsoft | Redmond, WA
-UX Engineer (Contract via Aquent) | January 2018 - August 2018
-React • TypeScript • JavaScript • C#
+UX Engineer | January 2018 - August 2018
+Microsoft (Contract through Aquent)
 
-- Contributed features and bug fixes to Office UI Fabric React, an open-source TypeScript framework with 1M+ weekly downloads
+- Contributed features and bug fixes to Office UI Fabric React (now Fluent UI), an open-source TypeScript framework with 180K+ weekly downloads
 - Organized triage of 500+ GitHub issues to improve project maintainability and community engagement
-- Implemented automated design/dev/testing email pipeline in C# to enhance product quality control
+- Implemented email pipeline in C# to enhance product quality control
 
-Champagne Solutions | Seattle, WA
 Senior Web Application Developer | January 2017 - January 2018
-PHP • Laravel • JavaScript • SCSS
+Champagne Solutions
 
 - Managed full-stack web application projects from specification to deployment for multiple clients
 - Developed custom CRUD admin interfaces using Laravel framework and modern PHP practices
 
-efelle creative | Seattle, WA
 Lead Front-End Web Developer | July 2013 - January 2017
-PHP • JavaScript • SCSS • Python • Bash • C++
+efelle creative
 
 - Directed construction of 200+ client websites, leading a front-end development team with 20 primary ownership projects
 - Mentored developers to establish best practices as corporate standards, improving code quality and team efficiency
 - Evaluated and implemented automation strategies with executive leadership, balancing security and performance
-- Elevated proprietary CMS capabilities by creating Hydrogen, a custom front-end framework
-- Engineered interactive nutrient calculator for Dutch Master Nutrients using JavaScript, JSON, and AJAX
 
-Earlier Experience (2008-2013)
-- Adaptive Logix - Web Developer (2012-2013): SharePoint, ASP.NET, Drupal development for enterprise clients
-- The Seattle Times - Digital Customer Service (Contract, 2012): Supported mobile app launch
-- Amazon - Digital Media Ingestion Specialist (Contract, 2011-2012): Media-On-Demand processing
-- Lighthouse Document Technologies - IQC Specialist (2010-2011): Database QA for legal discovery
-- Tocrok Productions - Associate Producer (2009-2010): Digital and interactive production projects
-- Cupcake Mission - Web Design & Marketing Consultant (2009): Website, SEO, video production
+Web Developer / Founder | June 2012 - July 2013
+Adaptive Logix
+
+- Founded consulting company; secured The Seattle Times as first client, building SharePoint, ASP.NET, and Drupal applications for customer management
+- Learned critical lessons in business development, client relationships, and balancing growth with operational capacity
+
+Early Career Experience | 2008 - 2013
+- The Seattle Times - Customer Service (2012): Supported mobile app launch
+- Amazon - Digital Media Ingestion Specialist (2011): Media-On-Demand
+- Lighthouse Document Technologies - IQC (2010): Data QA for legal discovery
+- Tocrok Productions - Associate Producer (2009): Digital and interactive production projects
+
+PERSONAL SKILLS
+• Technical Leadership
+• Rapid Prototyping
+• Cross-functional Collaboration
+• Mentorship & Teaching
+• User Research & Feedback Integration
+• Strategic Problem Solving
+• Innovation & Experimentation
 
 EDUCATION
 
-Southern Methodist University | Dallas, TX
-Bachelor of Arts | 2004 - 2008
-Cinema/Television Major • Computer Engineering Minor
+B.A. Cinema/Television & Computer Engineering Minor
+Southern Methodist University
+2004 - 2008
 
-HONORS & RECOGNITION
+HONORS & AWARDS
 
-Eagle Scout • Anniston Museum of Natural History Volunteer of the Year • Blueprint Technologies Core Values Award (2019)
+Eagle Scout (2004)
+Anniston Museum of Natural History Volunteer of the Year (2004)
+Blueprint Technologies Core Value Award (2019)
   `,
   skills: [
     { value: "React", rating: 5 },
@@ -154,16 +168,15 @@ Eagle Scout • Anniston Museum of Natural History Volunteer of the Year • Blu
     { value: "GenAI", rating: 5 },
   ],
   experience: [
-    "Blueprint Consulting Services - UX Software Engineer, Lead (Sept 2018 - Present)",
-    "Microsoft - UX Engineer, Contract (Jan 2018 - Aug 2018)",
+    "Blueprint Technologies - UX Software Engineer, Lead (Sept 2018 - Jan 2026)",
+    "Microsoft (Contract through Aquent) - UX Engineer (Jan 2018 - Aug 2018)",
     "Champagne Solutions - Senior Web Application Developer (Jan 2017 - Jan 2018)",
     "efelle creative - Lead Front-End Web Developer (Jul 2013 - Jan 2017)",
-    "Adaptive Logix - Web Developer (2012-2013)",
-    "The Seattle Times - Digital Customer Service (2012)",
-    "Amazon - Digital Media Ingestion Specialist (2011-2012)",
-    "Lighthouse Document Technologies - IQC Specialist (2010-2011)",
-    "Tocrok Productions - Associate Producer (2009-2010)",
-    "Cupcake Mission - Web Design & Marketing Consultant (2009)",
+    "Adaptive Logix - Web Developer / Founder (Jun 2012 - Jul 2013)",
+    "The Seattle Times - Customer Service (2012)",
+    "Amazon - Digital Media Ingestion Specialist (2011)",
+    "Lighthouse Document Technologies - IQC (2010)",
+    "Tocrok Productions - Associate Producer (2009)",
   ],
   education: [
     "Southern Methodist University - Bachelor of Arts (2004-2008)",
