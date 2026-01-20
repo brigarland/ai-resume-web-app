@@ -307,14 +307,21 @@ export const useStyles = makeStyles({
 
   contentGrid: {
     display: "grid",
-    gridTemplateColumns: "400px 1fr 400px",
+    gridTemplateColumns: "400px 1fr",
     ...shorthands.gap("32px"),
     alignItems: "start",
-    "@media (max-width: 1400px)": {
-      gridTemplateColumns: "360px 1fr",
+    "@media (max-width: 600px)": {
+      gridTemplateColumns: "1fr",
       ...shorthands.gap("24px"),
     },
-    "@media (max-width: 600px)": {
+  },
+
+  // Wrapper for middle + right columns
+  mainContentWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 400px",
+    ...shorthands.gap("32px"),
+    "@media (max-width: 1400px)": {
       gridTemplateColumns: "1fr",
       ...shorthands.gap("24px"),
     },

@@ -259,25 +259,6 @@ function Home() {
                   </a>
                 </div>
                 <div className={styles.contactItem}>
-                  <Location24Regular />
-                  <span>Seattle, WA</span>
-                </div>
-                <div className={styles.contactItem}>
-                  <CodeCircle20Regular />
-                  <a
-                    href="https://github.com/brigarland/ai-resume-web-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialLink}
-                  >
-                    Project Code
-                  </a>
-                </div>
-              </div>
-
-              {/* Column 2 */}
-              <div className={styles.contactColumn}>
-                <div className={styles.contactItem}>
                   <FontAwesomeIcon
                     icon={faLinkedin}
                     style={{ fontSize: "20px" }}
@@ -292,6 +273,14 @@ function Home() {
                   </a>
                 </div>
                 <div className={styles.contactItem}>
+                  <Location24Regular />
+                  <span>Seattle, WA</span>
+                </div>
+              </div>
+
+              {/* Column 2 */}
+              <div className={styles.contactColumn}>
+                <div className={styles.contactItem}>
                   <FontAwesomeIcon
                     icon={faGithub}
                     style={{ fontSize: "20px" }}
@@ -304,6 +293,31 @@ function Home() {
                   >
                     brigarland
                   </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <CodeCircle20Regular />
+                  <a
+                    href="https://github.com/brigarland/ai-resume-web-app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                    style={{ marginLeft: "4px" }}
+                  >
+                    Portfolio Code on Github
+                  </a>
+                  <Tooltip
+                    content={{
+                      children: (
+                        <div className={styles.tooltipContent}>
+                          Links to the code for this web app in my public Github
+                          repositorys
+                        </div>
+                      ),
+                    }}
+                    relationship="description"
+                  >
+                    <Info16Regular className={styles.headerInfoIcon} />
+                  </Tooltip>
                 </div>
                 <div className={`${styles.contactItem} resume-item-wrapper`}>
                   <DocumentPdf24Regular />
@@ -540,80 +554,85 @@ function Home() {
             </div>
           )}
 
-          {/* Middle Column: Recommendation + Strengths/Gaps */}
+          {/* Main Content Wrapper: Middle + Right Columns */}
           {analysisState.status === "complete" && analysisState.data && (
-            <div className={styles.middleColumn}>
-              {/* Recommendation - Full Width */}
-              <Card className={styles.recommendationCard}>
-                <CardHeader header={<Title2>Recommendation</Title2>} />
-                <Body1>{analysisState.data.recommendation}</Body1>
-              </Card>
-
-              {/* Strengths and Growth Areas in 2 columns */}
-              <div className={styles.strengthsGapsGrid}>
-                {/* Strengths */}
-                <Card className={styles.section}>
-                  <div className={styles.sectionTitle}>
-                    <Checkmark24Regular
-                      color={tokens.colorPaletteGreenForeground1}
-                    />
-                    <Title3>Strengths</Title3>
-                  </div>
-                  <ul className={styles.list}>
-                    {analysisState.data.strengths.map((strength, i) => (
-                      <li key={i} className={styles.listItem}>
-                        <Body1>{strength}</Body1>
-                      </li>
-                    ))}
-                  </ul>
+            <div className={styles.mainContentWrapper}>
+              {/* Middle Column: Recommendation + Strengths/Gaps */}
+              <div className={styles.middleColumn}>
+                {/* Recommendation - Full Width */}
+                <Card className={styles.recommendationCard}>
+                  <CardHeader header={<Title2>Recommendation</Title2>} />
+                  <Body1>{analysisState.data.recommendation}</Body1>
                 </Card>
 
-                {/* Growth Areas */}
-                {analysisState.data.gaps.length > 0 && (
+                {/* Strengths and Growth Areas in 2 columns */}
+                <div className={styles.strengthsGapsGrid}>
+                  {/* Strengths */}
                   <Card className={styles.section}>
                     <div className={styles.sectionTitle}>
-                      <Warning24Regular
-                        color={tokens.colorPaletteYellowForeground2}
+                      <Checkmark24Regular
+                        color={tokens.colorPaletteGreenForeground1}
                       />
-                      <Title3>Growth Areas</Title3>
+                      <Title3>Strengths</Title3>
                     </div>
                     <ul className={styles.list}>
-                      {analysisState.data.gaps.map((gap, i) => (
+                      {analysisState.data.strengths.map((strength, i) => (
                         <li key={i} className={styles.listItem}>
-                          <Body1>{gap}</Body1>
+                          <Body1>{strength}</Body1>
                         </li>
                       ))}
                     </ul>
                   </Card>
-                )}
+
+                  {/* Growth Areas */}
+                  {analysisState.data.gaps.length > 0 && (
+                    <Card className={styles.section}>
+                      <div className={styles.sectionTitle}>
+                        <Warning24Regular
+                          color={tokens.colorPaletteYellowForeground2}
+                        />
+                        <Title3>Growth Areas</Title3>
+                      </div>
+                      <ul className={styles.list}>
+                        {analysisState.data.gaps.map((gap, i) => (
+                          <li key={i} className={styles.listItem}>
+                            <Body1>{gap}</Body1>
+                          </li>
+                        ))}
+                      </ul>
+                    </Card>
+                  )}
+                </div>
               </div>
+
+              {/* Right Column: Relevant Stories */}
+              {analysisState.data.relevantStories.length > 0 && (
+                <div className={styles.rightColumn}>
+                  <div className={styles.sectionTitle}>
+                    <Book24Regular color={tokens.colorBrandForeground1} />
+                    <Title3>Relevant Experience Stories</Title3>
+                  </div>
+                  {analysisState.data.relevantStories.map((story) => (
+                    <Card key={story.id} className={styles.storyCard}>
+                      <CardHeader header={<Title3>{story.title}</Title3>} />
+                      <Body1>{story.context}</Body1>
+                      <div className={styles.storySkills}>
+                        {story.skills.map((skill, i) => (
+                          <Badge
+                            key={i}
+                            appearance="outline"
+                            color="informative"
+                          >
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
           )}
-
-          {/* Right Column: Relevant Stories */}
-          {analysisState.status === "complete" &&
-            analysisState.data &&
-            analysisState.data.relevantStories.length > 0 && (
-              <div className={styles.rightColumn}>
-                <div className={styles.sectionTitle}>
-                  <Book24Regular color={tokens.colorBrandForeground1} />
-                  <Title3>Relevant Experience Stories</Title3>
-                </div>
-                {analysisState.data.relevantStories.map((story) => (
-                  <Card key={story.id} className={styles.storyCard}>
-                    <CardHeader header={<Title3>{story.title}</Title3>} />
-                    <Body1>{story.context}</Body1>
-                    <div className={styles.storySkills}>
-                      {story.skills.map((skill, i) => (
-                        <Badge key={i} appearance="outline" color="informative">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
         </div>
       </main>
 
