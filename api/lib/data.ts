@@ -44,6 +44,50 @@ export const stories: IStory[] = [
     ],
     categories: ["technical", "leadership", "open-source"],
   },
+  {
+    id: "story-003",
+    title: "Training Video Production Career Foundation",
+    context:
+      "Career in technical communication began with producing an award-winning public service announcement for Willie Nelson's Hepatitis C awareness campaign, followed by creating training videos for the American Heart Association and Alaska State Troopers. This foundation in translating complex information into accessible visual content evolved throughout career into software documentation, technical training materials, and most importantly, effective human-centered communication in technology environments. The core skill remains constant: understanding the audience, breaking down complexity, and delivering information in the most digestible format.",
+    skills: [
+      "video production",
+      "technical communication",
+      "instructional design",
+      "audience analysis",
+      "content creation",
+      "documentation",
+      "training development",
+    ],
+    outcomes: [
+      "Produced award-winning PSA for national health campaign",
+      "Created training materials for healthcare and law enforcement organizations",
+      "Applied video production expertise to software training and technical documentation throughout career",
+      "Developed ability to translate complex technical concepts for diverse audiences",
+    ],
+    categories: ["communication", "content-creation", "education"],
+  },
+  {
+    id: "story-004",
+    title: "Mt. Rainier Summit: Breaking Down Impossible Challenges",
+    context:
+      "When faced with summiting Mt. Rainier and feeling overwhelmed by the enormity of the challenge, a guide shared transformative advice: don't look up at the peak, just focus on taking the next single step. Can you take one more step? Of course. Then do it. And again. And again. This experience fundamentally changed approach to daunting challenges, embodying principles later recognized as Stoic philosophy - focus only on what you can control in this moment, break overwhelming problems into manageable actions, and trust that consistent small steps lead to remarkable outcomes. This mindset has been applied throughout career when facing complex technical projects, tight deadlines, and seemingly impossible requirements.",
+    skills: [
+      "perseverance",
+      "incremental progress",
+      "focus management",
+      "stress management",
+      "goal decomposition",
+      "resilience",
+      "strategic thinking",
+    ],
+    outcomes: [
+      "Successfully summited Mt. Rainier by focusing on incremental progress",
+      "Developed mental framework for breaking down overwhelming challenges",
+      "Applied 'next step' methodology to complex software projects and tight deadlines",
+      "Internalized principles later recognized as Stoic philosophy: control what you can control, focus on the present moment",
+    ],
+    categories: ["personal-growth", "problem-solving", "resilience"],
+  },
 ];
 
 /**
