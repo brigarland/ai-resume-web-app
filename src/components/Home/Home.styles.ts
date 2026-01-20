@@ -310,7 +310,7 @@ export const useStyles = makeStyles({
     gridTemplateColumns: "400px 1fr",
     ...shorthands.gap("32px"),
     alignItems: "start",
-    "@media (max-width: 600px)": {
+    "@media (max-width: 850px)": {
       gridTemplateColumns: "1fr",
       ...shorthands.gap("24px"),
     },
@@ -334,7 +334,7 @@ export const useStyles = makeStyles({
     ...shorthands.gap("24px"),
     position: "sticky",
     top: "24px",
-    "@media (max-width: 600px)": {
+    "@media (max-width: 850px)": {
       position: "static",
     },
   },
@@ -518,8 +518,17 @@ export const useStyles = makeStyles({
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     ...shorthands.gap("24px"),
-    "@media (max-width: 900px)": {
+    "@media (max-width: 1200px)": {
       gridTemplateColumns: "1fr",
+    },
+    "@media (min-width: 1201px) and (max-width: 1400px)": {
+      gridTemplateColumns: "1fr 1fr",
+    },
+    "@media (min-width: 1401px) and (max-width: 1600px)": {
+      gridTemplateColumns: "1fr",
+    },
+    "@media (min-width: 1601px)": {
+      gridTemplateColumns: "1fr 1fr",
     },
   },
 
