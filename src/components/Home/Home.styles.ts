@@ -98,7 +98,7 @@ export const useStyles = makeStyles({
   contactInfo: {
     display: "flex",
     flexDirection: "column",
-    ...shorthands.gap("6px"),
+    ...shorthands.gap("16px"),
     fontSize: "15px",
     color: tokens.colorNeutralForegroundOnBrand,
     opacity: "0.9",
@@ -108,30 +108,142 @@ export const useStyles = makeStyles({
     },
   },
 
+  contactGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    ...shorthands.gap("24px", "32px"),
+    "@media (max-width: 1200px)": {
+      gridTemplateColumns: "1fr",
+      ...shorthands.gap("16px"),
+    },
+  },
+
+  contactColumn: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("8px"),
+  },
+
   contactItem: {
     display: "flex",
     alignItems: "center",
     ...shorthands.gap("8px"),
   },
 
+  emailLink: {
+    color: tokens.colorNeutralForegroundOnBrand,
+    textDecoration: "none",
+    ":hover": {
+      textDecoration: "underline",
+    },
+  },
+
+  socialLink: {
+    color: tokens.colorNeutralForegroundOnBrand,
+    textDecoration: "none",
+    ":hover": {
+      textDecoration: "underline",
+    },
+  },
+
+  resumeLink: {
+    color: tokens.colorNeutralForegroundOnBrand,
+    textDecoration: "none",
+    ":hover": {
+      textDecoration: "underline",
+    },
+  },
+
+  resumeContainer: {
+    display: "flex",
+    alignItems: "center",
+    ...shorthands.gap("4px"),
+  },
+
+  resumeContainerHover: {
+    ":hover + .downloadButtonHidden": {
+      opacity: "1",
+      visibility: "visible",
+    },
+  },
+
+  downloadButton: {
+    marginLeft: "4px",
+    minWidth: "auto",
+    color: tokens.colorNeutralForegroundOnBrand,
+    borderTopColor: tokens.colorNeutralForegroundOnBrand,
+    borderRightColor: tokens.colorNeutralForegroundOnBrand,
+    borderBottomColor: tokens.colorNeutralForegroundOnBrand,
+    borderLeftColor: tokens.colorNeutralForegroundOnBrand,
+    ":hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      borderTopColor: tokens.colorNeutralForegroundOnBrand,
+      borderRightColor: tokens.colorNeutralForegroundOnBrand,
+      borderBottomColor: tokens.colorNeutralForegroundOnBrand,
+      borderLeftColor: tokens.colorNeutralForegroundOnBrand,
+      color: tokens.colorNeutralForegroundOnBrand,
+    },
+  },
+
+  externalIcon: {
+    fontSize: "12px",
+    marginLeft: "2px",
+  },
+
+  resumeDownloadSection: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    ...shorthands.gap("8px"),
+    ...shorthands.padding("12px"),
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+    backdropFilter: "blur(10px)",
+    minWidth: "240px",
+    maxWidth: "240px",
+    "@media (max-width: 1200px)": {
+      maxWidth: "100%",
+      width: "100%",
+    },
+  },
+
+  resumeButton: {
+    width: "100%",
+    color: tokens.colorNeutralForegroundOnBrand,
+    ":hover": {
+      color: tokens.colorNeutralForegroundOnBrand,
+    },
+  },
+
+  resumeSubtitle: {
+    textAlign: "center",
+    color: tokens.colorNeutralForegroundOnBrand,
+    opacity: "0.85",
+    fontSize: "11px",
+    maxWidth: "220px",
+    lineHeight: "1.3",
+  },
   videoPlaceholder: {
     backgroundColor: "rgba(255, 255, 255, 0.15)",
     ...shorthands.border("2px", "dashed", "rgba(255, 255, 255, 0.4)"),
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
-    ...shorthands.padding("32px", "24px"),
+    ...shorthands.padding("24px", "16px"),
     textAlign: "center",
-    minWidth: "280px",
+    minWidth: "200px",
+    maxWidth: "200px",
     backdropFilter: "blur(10px)",
     "@media (max-width: 1200px)": {
+      maxWidth: "100%",
       width: "100%",
     },
   },
 
   videoPlaceholderText: {
     color: tokens.colorNeutralForegroundOnBrand,
-    fontSize: "14px",
+    fontSize: "12px",
     fontWeight: tokens.fontWeightSemibold,
     ...shorthands.margin(0),
+    lineHeight: "1.3",
   },
   // Input Section (new full-width section below header)
   inputSection: {
@@ -324,7 +436,7 @@ export const useStyles = makeStyles({
   },
 
   scoreLabel: {
-    fontSize: "14px",
+    fontSize: "12px",
     lineHeight: "0.2",
     color: tokens.colorNeutralForeground2,
     textTransform: "uppercase",
@@ -346,6 +458,11 @@ export const useStyles = makeStyles({
   infoIcon: {
     cursor: "help",
     color: tokens.colorNeutralForeground3,
+  },
+
+  headerInfoIcon: {
+    cursor: "help",
+    color: tokens.colorNeutralForegroundOnBrand,
   },
 
   tooltipContent: {

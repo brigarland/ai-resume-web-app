@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import {
   Card,
   CardHeader,
@@ -33,6 +35,9 @@ import {
   Link20Regular,
   Mail20Regular,
   ShareAndroid20Regular,
+  DocumentPdf24Regular,
+  CodeCircle20Regular,
+  ArrowDownload20Regular,
 } from "@fluentui/react-icons";
 import { SkillBadge } from "@/components/SkillBadge";
 import { apiUrl, isDebugMode } from "@/constants";
@@ -241,13 +246,103 @@ function Home() {
           </div>
 
           <div className={styles.contactInfo}>
-            <div className={styles.contactItem}>
-              <Mail24Regular />
-              <span>bri.garland@gmail.com</span>
-            </div>
-            <div className={styles.contactItem}>
-              <Location24Regular />
-              <span>Seattle, WA</span>
+            <div className={styles.contactGrid}>
+              {/* Column 1 */}
+              <div className={styles.contactColumn}>
+                <div className={styles.contactItem}>
+                  <Mail24Regular />
+                  <a
+                    href="mailto:bri.garland@gmail.com"
+                    className={styles.emailLink}
+                  >
+                    bri.garland@gmail.com
+                  </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <FontAwesomeIcon
+                    icon={faLinkedin}
+                    style={{ fontSize: "20px" }}
+                  />
+                  <a
+                    href="https://www.linkedin.com/in/brian-garland-672477b/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                  >
+                    LinkedIn
+                  </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <Location24Regular />
+                  <span>Seattle, WA</span>
+                </div>
+              </div>
+
+              {/* Column 2 */}
+              <div className={styles.contactColumn}>
+                <div className={styles.contactItem}>
+                  <FontAwesomeIcon
+                    icon={faGithub}
+                    style={{ fontSize: "20px" }}
+                  />
+                  <a
+                    href="https://github.com/brigarland"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                  >
+                    brigarland
+                  </a>
+                </div>
+                <div className={styles.contactItem}>
+                  <CodeCircle20Regular />
+                  <a
+                    href="https://github.com/brigarland/ai-resume-web-app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                    style={{ marginLeft: "4px" }}
+                  >
+                    Portfolio Code on Github
+                  </a>
+                  <Tooltip
+                    content={{
+                      children: (
+                        <div className={styles.tooltipContent}>
+                          Links to the code for this web app in my public Github
+                          repositorys
+                        </div>
+                      ),
+                    }}
+                    relationship="description"
+                  >
+                    <Info16Regular className={styles.headerInfoIcon} />
+                  </Tooltip>
+                </div>
+                <div className={`${styles.contactItem} resume-item-wrapper`}>
+                  <DocumentPdf24Regular />
+                  <a
+                    href="/brian-garland-resume.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.resumeLink}
+                  >
+                    Resume/CV
+                  </a>
+                  <div className="download-btn-hidden">
+                    <Button
+                      as="a"
+                      href="/brian-garland-resume.pdf"
+                      download
+                      appearance="outline"
+                      size="small"
+                      icon={<ArrowDownload20Regular />}
+                      className={styles.downloadButton}
+                      title="Download PDF"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

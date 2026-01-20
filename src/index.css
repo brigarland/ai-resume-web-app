@@ -24,3 +24,15 @@ code {
 ul {
   list-style: none;
 }
+
+/* Download button hover effect */
+.download-btn-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.resume-item-wrapper:hover .download-btn-hidden {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
