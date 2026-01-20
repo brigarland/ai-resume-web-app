@@ -276,6 +276,12 @@ export const useStyles = makeStyles({
     },
   },
 
+  inputFormDescription: {
+    display: "flex",
+    flexDirection: "column",
+    ...shorthands.gap("16px"),
+  },
+
   inputTabs: {
     marginBottom: "16px",
   },
@@ -291,6 +297,10 @@ export const useStyles = makeStyles({
     "@media (max-width: 992px)": {
       width: "100%",
     },
+  },
+
+  submitButtonFullWidth: {
+    width: "100%",
   },
 
   // Main Content

@@ -59,6 +59,7 @@ function Home() {
     error: null,
   });
   const [autoLoaded, setAutoLoaded] = useState(false);
+  const [analyzingJobUrl, setAnalyzingJobUrl] = useState<string>("");
   const [nativeShareAvailable, setNativeShareAvailable] = useState(false);
 
   // Check if native share is available
@@ -75,6 +76,8 @@ function Home() {
       return;
     }
 
+    // Save the URL being analyzed (or clear if using description)
+    setAnalyzingJobUrl(urlToAnalyze || "");
     setAnalysisState({ status: "loading", data: null, error: null });
 
     try {
@@ -132,10 +135,11 @@ function Home() {
 
       // Auto-submit after setting the URL
       // Small delay to ensure state is updated and UI has rendered
-      setTimeout(() => {
-        performAnalysis(decodedUrl);
-        // Clear the URL parameter after auto-submit to avoid confusion
+      setTimeout(async () => {
+        await performAnalysis(decodedUrl);
+        // Clear the URL parameter and field after auto-submit
         clearUrlParameter();
+        setJobUrl("");
       }, 100);
     }
   }, []);
@@ -153,7 +157,9 @@ function Home() {
     setAutoLoaded(false);
 
     if (inputMode === "url") {
-      performAnalysis(jobUrl);
+      await performAnalysis(jobUrl);
+      // Clear URL field after successful submission
+      setJobUrl("");
     } else {
       performAnalysis(undefined, jobDescription);
     }
@@ -161,9 +167,9 @@ function Home() {
 
   // Generate shareable URL
   const getShareUrl = () => {
-    if (inputMode === "url" && jobUrl) {
+    if (analyzingJobUrl) {
       const baseUrl = window.location.origin;
-      return `${baseUrl}?url=${encodeURIComponent(jobUrl)}`;
+      return `${baseUrl}?url=${encodeURIComponent(analyzingJobUrl)}`;
     }
     return window.location.href;
   };
@@ -360,7 +366,12 @@ function Home() {
         <div className={styles.inputSectionContent}>
           <TabList
             selectedValue={inputMode}
-            onTabSelect={(_, data) => setInputMode(data.value as TInputMode)}
+            onTabSelect={(_, data) => {
+              setInputMode(data.value as TInputMode);
+              // Clear both fields when switching tabs
+              setJobUrl("");
+              setJobDescription("");
+            }}
             className={styles.inputTabs}
           >
             <Tab value="url" icon={<Link24Regular />}>
@@ -371,38 +382,60 @@ function Home() {
             </Tab>
           </TabList>
 
-          {autoLoaded && inputMode === "url" && (
-            <MessageBar intent="info" style={{ marginBottom: "16px" }}>
-              <MessageBarBody>
-                Auto-analyzing job posting from shared link...
-              </MessageBarBody>
-            </MessageBar>
-          )}
+          {(analysisState.status === "loading" ||
+            analysisState.status === "complete") &&
+            analyzingJobUrl && (
+              <MessageBar intent="info" style={{ marginBottom: "16px" }}>
+                <MessageBarBody>
+                  {autoLoaded ? "Auto-analyzing" : "Analyzing"} job posting from{" "}
+                  <a
+                    href={analyzingJobUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: tokens.colorBrandForeground1,
+                      textDecoration: "underline",
+                    }}
+                  >
+                    {analyzingJobUrl}
+                  </a>
+                </MessageBarBody>
+              </MessageBar>
+            )}
 
-          <div className={styles.inputForm}>
+          <div
+            className={
+              inputMode === "description"
+                ? styles.inputFormDescription
+                : styles.inputForm
+            }
+          >
             {inputMode === "url" ? (
               <Input
                 type="url"
                 placeholder="Paste any job listing URL here..."
                 value={jobUrl}
                 onChange={(_, data) => setJobUrl(data.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && jobUrl.trim()) {
+                    handleAnalyze();
+                  }
+                }}
                 disabled={analysisState.status === "loading"}
                 contentBefore={<Link24Regular />}
                 size="large"
                 style={{ width: "100%" }}
               />
             ) : (
-              <div className={styles.textareaWrapper}>
-                <Textarea
-                  placeholder="Paste a job description here, or type in a description manually..."
-                  value={jobDescription}
-                  onChange={(_, data) => setJobDescription(data.value)}
-                  disabled={analysisState.status === "loading"}
-                  rows={6}
-                  resize="vertical"
-                  style={{ width: "100%" }}
-                />
-              </div>
+              <Textarea
+                placeholder="Paste a job description here, or type in a description manually..."
+                value={jobDescription}
+                onChange={(_, data) => setJobDescription(data.value)}
+                disabled={analysisState.status === "loading"}
+                rows={6}
+                resize="vertical"
+                style={{ width: "100%" }}
+              />
             )}
 
             <Button
@@ -417,7 +450,11 @@ function Home() {
                   <ChartMultiple24Regular />
                 )
               }
-              className={styles.submitButton}
+              className={
+                inputMode === "description"
+                  ? styles.submitButtonFullWidth
+                  : styles.submitButton
+              }
             >
               {analysisState.status === "loading"
                 ? "Analyzing..."
