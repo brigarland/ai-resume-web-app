@@ -259,6 +259,25 @@ function Home() {
                   </a>
                 </div>
                 <div className={styles.contactItem}>
+                  <Location24Regular />
+                  <span>Seattle, WA</span>
+                </div>
+                <div className={styles.contactItem}>
+                  <CodeCircle20Regular />
+                  <a
+                    href="https://github.com/brigarland/ai-resume-web-app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.socialLink}
+                  >
+                    Project Code
+                  </a>
+                </div>
+              </div>
+
+              {/* Column 2 */}
+              <div className={styles.contactColumn}>
+                <div className={styles.contactItem}>
                   <FontAwesomeIcon
                     icon={faLinkedin}
                     style={{ fontSize: "20px" }}
@@ -273,14 +292,6 @@ function Home() {
                   </a>
                 </div>
                 <div className={styles.contactItem}>
-                  <Location24Regular />
-                  <span>Seattle, WA</span>
-                </div>
-              </div>
-
-              {/* Column 2 */}
-              <div className={styles.contactColumn}>
-                <div className={styles.contactItem}>
                   <FontAwesomeIcon
                     icon={faGithub}
                     style={{ fontSize: "20px" }}
@@ -293,31 +304,6 @@ function Home() {
                   >
                     brigarland
                   </a>
-                </div>
-                <div className={styles.contactItem}>
-                  <CodeCircle20Regular />
-                  <a
-                    href="https://github.com/brigarland/ai-resume-web-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialLink}
-                    style={{ marginLeft: "4px" }}
-                  >
-                    Portfolio Code on Github
-                  </a>
-                  <Tooltip
-                    content={{
-                      children: (
-                        <div className={styles.tooltipContent}>
-                          Links to the code for this web app in my public Github
-                          repositorys
-                        </div>
-                      ),
-                    }}
-                    relationship="description"
-                  >
-                    <Info16Regular className={styles.headerInfoIcon} />
-                  </Tooltip>
                 </div>
                 <div className={`${styles.contactItem} resume-item-wrapper`}>
                   <DocumentPdf24Regular />
@@ -604,11 +590,11 @@ function Home() {
             </div>
           )}
 
-          {/* Third Column: Relevant Stories */}
+          {/* Right Column: Relevant Stories */}
           {analysisState.status === "complete" &&
             analysisState.data &&
             analysisState.data.relevantStories.length > 0 && (
-              <div className={styles.storiesColumn}>
+              <div className={styles.rightColumn}>
                 <div className={styles.sectionTitle}>
                   <Book24Regular color={tokens.colorBrandForeground1} />
                   <Title3>Relevant Experience Stories</Title3>

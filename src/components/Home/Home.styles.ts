@@ -113,6 +113,10 @@ export const useStyles = makeStyles({
     gridTemplateColumns: "1fr 1fr",
     ...shorthands.gap("24px", "32px"),
     "@media (max-width: 1200px)": {
+      gridTemplateColumns: "1fr 1fr",
+      ...shorthands.gap("16px", "24px"),
+    },
+    "@media (max-width: 768px)": {
       gridTemplateColumns: "1fr",
       ...shorthands.gap("16px"),
     },
@@ -490,11 +494,11 @@ export const useStyles = makeStyles({
   },
 
   // Right Column
-  rightColumn: {
-    display: "flex",
-    flexDirection: "column",
-    ...shorthands.gap("24px"),
-  },
+  //   rightColumn: {
+  //     display: "flex",
+  //     flexDirection: "column",
+  //     ...shorthands.gap("24px"),
+  //   },
 
   // Middle Column
   middleColumn: {
@@ -513,9 +517,10 @@ export const useStyles = makeStyles({
   },
 
   // Third Column (Stories)
-  storiesColumn: {
+  rightColumn: {
     display: "flex",
     flexDirection: "column",
+
     ...shorthands.gap("24px"),
   },
 
