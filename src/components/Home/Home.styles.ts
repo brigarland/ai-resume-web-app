@@ -1,4 +1,5 @@
 import { makeStyles, tokens, shorthands } from "@fluentui/react-components";
+import nasaEarthBg from "@/assets/nasa-earth-header-bg.jpg";
 
 export const useStyles = makeStyles({
   // App Container
@@ -12,7 +13,9 @@ export const useStyles = makeStyles({
   // Header Section
   header: {
     ...shorthands.padding("32px"),
-    background: `linear-gradient(135deg, ${tokens.colorBrandBackground} 0%, ${tokens.colorBrandBackgroundHover} 100%)`,
+    background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${nasaEarthBg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     color: tokens.colorNeutralForegroundOnBrand,
     display: "flex",
     justifyContent: "center",
