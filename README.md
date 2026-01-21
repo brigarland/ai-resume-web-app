@@ -2,7 +2,7 @@
 
 An AI-powered web application that analyzes job fit by matching your resume and personal stories against job postings using Claude AI.
 
-**Live Demo:** [brigarland.com](https://brigarland.com) _(coming soon)_
+**Live Demo:** [brigarland.com](https://brigarland.com)
 
 ## Overview
 
@@ -11,7 +11,7 @@ This portfolio project demonstrates:
 - **AI Integration**: Anthropic Claude API with Sonnet 4.5 for intelligent analysis
 - **Modern Web Stack**: React + TypeScript + Vite for fast, type-safe development
 - **Serverless Architecture**: Vercel Functions for scalable, cost-effective API calls
-- **Clean Code**: SCSS modules for maintainable styling
+- **Clean Code**: Fluent UI makeStyles for maintainable, type-safe styling
 - **Cost Optimization**: Prompt caching and structured outputs
 
 ## Features
@@ -26,9 +26,10 @@ This portfolio project demonstrates:
 
 ### Frontend
 
-- **React 18** with TypeScript
+- **React 19** with TypeScript
 - **Vite** for fast builds and HMR
-- **SCSS Modules** for scoped, maintainable styles
+- **Fluent UI** (Microsoft's design system with makeStyles for styling)
+- **Font Awesome** for brand icons (GitHub, LinkedIn)
 - **Modern ES6+** features
 
 ### Backend
@@ -48,16 +49,20 @@ This portfolio project demonstrates:
 ai-resume-analyzer/
 ├── src/
 │   ├── components/      # React components
-│   ├── constants/       # Constants, Enums, etc
-│   ├── styles/          # Shared SCSS elements
+│   ├── constants/       # Constants, Enums, strings
 │   ├── types/           # TypeScript type definitions
 │   ├── utils/           # Utility functions
+│   ├── assets/          # Images (headshot, backgrounds)
 │   ├── App.tsx          # Main app component
+│   ├── index.css        # Global styles
 │   └── main.tsx         # React entry point
 ├── api/
-│   └── analyze.ts       # Vercel serverless function
-│   ├── lib/             # Resume and stories data
-├── public/              # Static assets
+│   ├── analyze.ts       # Vercel serverless function
+│   └── lib/             # Backend utilities
+│       ├── data.ts      # Resume and stories data
+│       ├── scraper.ts   # Job posting web scraper
+│       └── types.ts     # Shared type definitions
+├── public/              # Static assets (uncompiled)
 └── dist/                # Build output (gitignored)
 ```
 
@@ -65,7 +70,7 @@ ai-resume-analyzer/
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20 and npm (nvm recommended for version management: [OSX/Linux](https://github.com/nvm-sh/nvm) | [Windows](https://github.com/coreybutler/nvm-windows))
 - Anthropic API key ([get one here](https://console.anthropic.com/))
 
 ### Installation
@@ -85,9 +90,16 @@ ai-resume-analyzer/
 
 3. **Set up environment variables**
 
+   Create a `.env` file in the project root:
+
    ```bash
-   cp .env.example .env
-   # Edit .env and add your ANTHROPIC_API_KEY
+   # Backend - Anthropic API Key (used in api/analyze.ts)
+   # Get your key from: https://console.anthropic.com/
+   ANTHROPIC_API_KEY=your_api_key_here
+
+   # Frontend - API Base URL (used in React)
+   VITE_API_URL=https://ai-resume-web-app.vercel.app
+   # VITE_DEBUG_MODE=true
    ```
 
 4. **Run development server**
@@ -103,10 +115,9 @@ ai-resume-analyzer/
 
 ### Customize Your Data
 
-Edit these files to add your information:
+Edit this file to add your information:
 
-- **`src/api.lib/stories.ts`**: Add your personal stories and experiences
-- **`src/api/lib/stories.ts`**: Update the `resumeData` object with your resume
+- **`api/lib/data.ts`**: Contains two exports - `stories` array for your personal experiences and `resumeData` object for your resume content
 
 ## Deployment
 
@@ -125,9 +136,15 @@ Edit these files to add your information:
    - Add `ANTHROPIC_API_KEY` to environment variables
 
 3. **Configure custom domain**
+
    - In Vercel dashboard: Settings → Domains
    - Add your domain (e.g., brigarland.com)
    - Update DNS records in Namecheap
+
+4. **Deploy to production**
+   - Push changes to your main branch on GitHub
+   - Vercel will automatically build and deploy
+   - Or use the Vercel CLI: `vercel --prod`
 
 ## API Usage & Costs
 
@@ -161,7 +178,12 @@ Edit these files to add your information:
 
 ## Contributing
 
-This is a portfolio project, but feedback and suggestions are welcome! Feel free to open issues or submit PRs.
+This is a portfolio project, but feedback and suggestions are welcome! Feel free to:
+
+- Fork this repo to build your own AI-powered resume analyzer
+- Open issues for bugs or feature requests
+- Submit PRs for improvements
+- Give us a ⭐ on GitHub if you find this useful!
 
 ## License
 
