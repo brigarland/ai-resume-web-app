@@ -98,7 +98,7 @@ ai-resume-analyzer/
    ANTHROPIC_API_KEY=your_api_key_here
 
    # Frontend - API Base URL (used in React)
-   VITE_API_URL=https://ai-resume-web-app.vercel.app
+   VITE_API_URL=your_vercel_api_url
    # VITE_DEBUG_MODE=true
    ```
 
