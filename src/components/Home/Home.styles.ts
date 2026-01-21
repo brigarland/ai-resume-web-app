@@ -649,6 +649,12 @@ export const useStyles = makeStyles({
     maxWidth: "700px",
   },
 
+  wrappableLink: {
+    wordBreak: "break-all",
+    overflowWrap: "anywhere",
+    display: "inline",
+  },
+
   // Footer
   footer: {
     textAlign: "center",
@@ -665,5 +671,16 @@ export const useStyles = makeStyles({
     ":hover": {
       textDecoration: "underline",
     },
+  },
+
+  footerSubtitle: {
+    color: tokens.colorNeutralForeground3,
+  },
+
+  footerCopyright: {
+    fontSize: "11px",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    color: tokens.colorNeutralForeground2,
   },
 });

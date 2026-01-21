@@ -413,6 +413,7 @@ function Home() {
                     href={analyzingJobUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className={styles.wrappableLink}
                     style={{
                       color: tokens.colorBrandForeground1,
                       textDecoration: "underline",
@@ -543,6 +544,7 @@ function Home() {
                       href={analyzingJobUrl}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className={styles.wrappableLink}
                       style={{
                         color: tokens.colorBrandForeground1,
                         textDecoration: "underline",
@@ -619,7 +621,6 @@ function Home() {
                       </div>
                     </div>
                   )}
-                  ;
                 </div>
 
                 <div className={styles.scoreGauge}>
@@ -787,9 +788,21 @@ function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <Caption1>
-          Built by Brian Garland | Portfolio project demonstrating AI
-          integration
+        <Caption1 className={styles.footerSubtitle}>
+          Designed and built by Brian Garland | Portfolio project demonstrating
+          AI integration
+        </Caption1>
+        <br />
+        <Caption1 className={styles.footerCopyright}>
+          © {new Date().getFullYear()} Brian Garland | Open source under{" "}
+          <a
+            href="https://github.com/brigarland/ai-resume-web-app/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.footerLink}
+          >
+            MIT License
+          </a>
         </Caption1>
         <br />
         <a
