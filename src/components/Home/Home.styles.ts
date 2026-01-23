@@ -230,27 +230,13 @@ export const useStyles = makeStyles({
     maxWidth: "220px",
     lineHeight: "1.3",
   },
-  videoPlaceholder: {
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-    ...shorthands.border("2px", "dashed", "rgba(255, 255, 255, 0.4)"),
-    ...shorthands.borderRadius(tokens.borderRadiusMedium),
+  videoContainer: {
     ...shorthands.padding("24px", "16px"),
     textAlign: "center",
-    minWidth: "200px",
-    maxWidth: "200px",
-    backdropFilter: "blur(10px)",
     "@media (max-width: 1200px)": {
       maxWidth: "100%",
       width: "100%",
     },
-  },
-
-  videoPlaceholderText: {
-    color: tokens.colorNeutralForegroundOnBrand,
-    fontSize: "12px",
-    fontWeight: tokens.fontWeightSemibold,
-    ...shorthands.margin(0),
-    lineHeight: "1.3",
   },
   // Input Section (new full-width section below header)
   inputSection: {

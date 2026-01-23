@@ -28,7 +28,6 @@ import {
   Link24Regular,
   Mail24Regular,
   Location24Regular,
-  Video24Regular,
   DocumentText24Regular,
   Info16Regular,
   Link20Regular,
@@ -373,11 +372,21 @@ function Home() {
             </div>
           </div>
 
-          <div className={styles.videoPlaceholder}>
-            <Video24Regular style={{ marginBottom: "8px" }} fontSize={24} />
-            <p className={styles.videoPlaceholderText}>
-              Project case study video coming soon
-            </p>
+          <div className={styles.videoContainer}>
+            <iframe
+              width="280"
+              height="158"
+              src="https://www.youtube.com/embed/k669GcR1cOg"
+              title="AI Integration Tutorial: Building a Smart Resume Web App"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              style={{
+                borderRadius: "8px",
+                border: "2px solid rgba(255, 255, 255, 0.3)",
+              }}
+            />
           </div>
         </div>
       </header>
