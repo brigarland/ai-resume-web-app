@@ -35,18 +35,10 @@ export function MatchFinder() {
               }}
             >
               <div className={styles.companyCardTop}>
-                {/* <div
-                  className={styles.companyLogo}
-                  style={{ backgroundColor: company.color }}
-                >
-                  {company.logoInitials}
-                </div> */}
                 <div
                   className={styles.companyLogo}
                   style={{
-                    backgroundColor: company.logo
-                      ? "transparent"
-                      : company.color,
+                    backgroundColor: company.color,
                   }}
                 >
                   {company.logo ? (
@@ -74,7 +66,9 @@ export function MatchFinder() {
                 <Title3 className={styles.companyCardTitle}>
                   {company.name}
                 </Title3>
-                <Body1>{company.description}</Body1>
+                <Body1 className={styles.companyCardDesc}>
+                  {company.description}
+                </Body1>
               </div>
             </div>
           ))}

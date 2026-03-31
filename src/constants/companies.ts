@@ -1,15 +1,14 @@
-import anthropicLogo from "@/assets/anthropic-logo.png";
+import anthropicLogo from "@/assets/anthropic-logo.svg";
 import type { ICompanyCard } from "@/types";
 
 export const COMPANIES: ICompanyCard[] = [
   {
     id: "anthropic",
     name: "Anthropic",
-    description:
-      "AI safety company building Claude. ~350 open roles, fully crawlable.",
+    description: "https://www.anthropic.com/careers/jobs",
     logo: anthropicLogo,
     logoInitials: "AN",
-    color: "#c96442",
+    color: "#d19b75",
     path: "/matchfinder/anthropic",
     isAvailable: true,
   },

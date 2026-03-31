@@ -180,6 +180,7 @@ export const useMatchFinderStyles = makeStyles({
   },
 
   companyLogoImg: {
+    padding: "8px",
     ...shorthands.borderRadius(tokens.borderRadiusMedium),
     width: "100%",
     height: "100%",
@@ -188,6 +189,10 @@ export const useMatchFinderStyles = makeStyles({
 
   companyCardTitle: {
     marginBottom: "4px",
+  },
+
+  companyCardDesc: {
+    display: "block",
   },
 
   // ── Results pages (/matchfinder/anthropic etc.) ───────────────────────────
