@@ -46,6 +46,38 @@ export async function setCachedScore(
 }
 
 /**
+ * Retrieve every cached job score by scanning all keys with the job: prefix.
+ * Used by the ?cached=true endpoint mode to return results instantly.
+ */
+export async function getAllCachedJobs(): Promise<
+  Array<{ jobId: string; data: ICachedJobScore }>
+> {
+  try {
+    // Scan all keys matching job:* — KV scan returns up to 1000 keys per call
+    const keys = await kv.keys(`${KEY_PREFIX}*`);
+    if (!keys.length) return [];
+
+    // Batch-fetch all values
+    const values = await Promise.all(
+      keys.map((key) => kv.get<ICachedJobScore>(key)),
+    );
+
+    const results: Array<{ jobId: string; data: ICachedJobScore }> = [];
+    for (let i = 0; i < keys.length; i++) {
+      const data = values[i];
+      if (data) {
+        const jobId = keys[i].replace(KEY_PREFIX, "");
+        results.push({ jobId, data });
+      }
+    }
+    return results;
+  } catch (err) {
+    console.warn("KV getAllCachedJobs failed:", err);
+    return [];
+  }
+}
+
+/**
  * Extract the numeric Greenhouse job ID from a Greenhouse URL.
  * e.g. https://job-boards.greenhouse.io/anthropic/jobs/5026097008 -> "5026097008"
  */

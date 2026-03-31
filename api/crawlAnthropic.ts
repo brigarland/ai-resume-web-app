@@ -26,6 +26,7 @@ import {
   getCachedScore,
   setCachedScore,
   extractJobId,
+  getAllCachedJobs,
 } from "./lib/jobCache.js";
 import { resumeData } from "./lib/data.js";
 import type { IJobListing, IScoredJob, ICrawlResponse } from "./lib/types.js";
@@ -262,9 +263,50 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET")
     return res.status(405).json({ error: "Method not allowed" });
 
-  // Optional: ?refresh=true to bypass cache for all jobs (re-score everything)
+  // Query param modes:
+  //   ?cached=true   — return only KV-cached scores, no live fetch (fast path)
+  //   ?newOnly=true  — fetch live listings, score only jobs NOT in cache, return new ones
+  //   ?refresh=true  — fetch live listings, re-score everything, bypass cache
+  //   (default)      — fetch live listings, use cache where available (original behavior)
+  const cachedOnly = req.query.cached === "true";
+  const newOnly = req.query.newOnly === "true";
   const forceRefresh = req.query.refresh === "true";
 
+  // ── Mode 1: cached=true — instant read from KV, no live fetch ──────────────
+  if (cachedOnly) {
+    try {
+      console.log("Returning cached jobs only...");
+      const cached = await getAllCachedJobs();
+
+      const scoredJobs: IScoredJob[] = cached.map(({ jobId, data }) => ({
+        jobId,
+        title: data.title,
+        location: data.location,
+        jobUrl: data.jobUrl,
+        analyzeUrl: `https://brigarland.com/?url=${encodeURIComponent(data.jobUrl)}`,
+        score: data.score,
+        fromCache: true,
+      }));
+
+      scoredJobs.sort((a, b) => b.score - a.score);
+
+      return res.status(200).json({
+        jobs: scoredJobs,
+        totalFound: scoredJobs.length,
+        skipped: 0,
+        cachedCount: scoredJobs.length,
+        company: "Anthropic",
+      } as ICrawlResponse);
+    } catch (error) {
+      console.error("Cached-only read error:", error);
+      return res.status(500).json({
+        error: "Failed to read cache",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  // ── Modes 2 / 3 / default: require fetching the live listings page ──────────
   try {
     console.log("Fetching Anthropic job listings...");
     const allJobs = await fetchJobListings();
@@ -281,30 +323,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         continue;
       }
 
-      // Check KV cache first
-      if (!forceRefresh) {
-        const cached = await getCachedScore(job.jobId);
-        if (cached) {
-          console.log(`Cache hit: ${job.title} → ${cached.score}`);
-          scoredJobs.push({
-            ...job,
-            title: cached.title, // use cached title in case it was cleaned
-            location: cached.location,
-            score: cached.score,
-            fromCache: true,
-          });
-          cachedCount++;
+      // Check KV cache
+      const cachedScore = forceRefresh ? null : await getCachedScore(job.jobId);
+
+      if (cachedScore) {
+        // newOnly mode: skip jobs already in cache — they'll be shown from the
+        // existing frontend state; we only want to return genuinely new ones.
+        if (newOnly) {
           continue;
         }
+
+        console.log(`Cache hit: ${job.title} → ${cachedScore.score}`);
+        scoredJobs.push({
+          ...job,
+          title: cachedScore.title,
+          location: cachedScore.location,
+          score: cachedScore.score,
+          fromCache: true,
+        });
+        cachedCount++;
+        continue;
       }
 
-      // Cache miss — fetch description and score with Claude
+      // Cache miss (or forceRefresh) — fetch description and score with Claude
       try {
         console.log(`Scoring: ${job.title}`);
         const description = await fetchJobDescription(job.jobUrl);
         const score = await scoreJobWithClaude(job.title, description);
 
-        // Write to KV cache
         await setCachedScore(job.jobId, {
           score,
           title: job.title,
@@ -319,22 +365,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         await new Promise((resolve) => setTimeout(resolve, 200));
       } catch (jobError) {
         console.error(`Failed to score job ${job.title}:`, jobError);
-        // Don't fail the whole batch — just skip this job
       }
     }
 
     // Sort by score descending
     scoredJobs.sort((a, b) => b.score - a.score);
 
-    const response: ICrawlResponse = {
+    return res.status(200).json({
       jobs: scoredJobs,
       totalFound: allJobs.length,
       skipped,
       cachedCount,
       company: "Anthropic",
-    };
-
-    return res.status(200).json(response);
+    } as ICrawlResponse);
   } catch (error) {
     console.error("Crawler error:", error);
     return res.status(500).json({

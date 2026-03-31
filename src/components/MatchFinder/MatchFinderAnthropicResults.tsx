@@ -16,6 +16,7 @@ import {
 import {
   ArrowLeft24Regular,
   ArrowClockwise20Regular,
+  Search20Regular,
   Info16Regular,
 } from "@fluentui/react-icons";
 import { PageWrapper, JobCard } from "@/components/shared";
@@ -28,12 +29,13 @@ export function MatchFinderAnthropicResults() {
   const navigate = useNavigate();
 
   const [status, setStatus] = useState<
-    "idle" | "loading" | "complete" | "error"
+    "idle" | "loading" | "checkingNew" | "complete" | "error"
   >("idle");
   const [allJobs, setAllJobs] = useState<IScoredJob[]>([]);
   const [summary, setSummary] = useState<Omit<ICrawlResponse, "jobs"> | null>(
     null,
   );
+  const [newJobsFound, setNewJobsFound] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [threshold, setThreshold] = useState(88);
   const [progress, setProgress] = useState(0);
@@ -41,7 +43,51 @@ export function MatchFinderAnthropicResults() {
 
   const filteredJobs = allJobs.filter((j) => j.score >= threshold);
 
-  async function runScan(forceRefresh = false) {
+  /**
+   * On mount: try the fast cached-only path first.
+   * If the cache is empty (first ever visit), fall through to a full crawl.
+   */
+  async function loadCachedOrFull() {
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+    setStatus("loading");
+    setError(null);
+
+    try {
+      const res = await fetch(`${apiUrl}/api/crawlAnthropic?cached=true`, {
+        signal: abortRef.current.signal,
+      });
+
+      if (!res.ok) throw new Error("Cache read failed");
+
+      const data: ICrawlResponse = await res.json();
+
+      if (data.jobs.length > 0) {
+        // We have cached results — show them immediately, no crawl needed
+        setAllJobs(data.jobs);
+        setSummary({
+          totalFound: data.totalFound,
+          skipped: data.skipped,
+          cachedCount: data.cachedCount,
+          company: data.company,
+        });
+        setStatus("complete");
+        return;
+      }
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      // Cache read failed — fall through to full crawl
+    }
+
+    // Cache was empty (first time) — run the full scoring crawl
+    await runFullScan();
+  }
+
+  /**
+   * Full crawl: fetch live listings + score any cache misses.
+   * This is the original first-time experience.
+   */
+  async function runFullScan(forceRefresh = false) {
     abortRef.current?.abort();
     abortRef.current = new AbortController();
 
@@ -85,10 +131,58 @@ export function MatchFinderAnthropicResults() {
     }
   }
 
+  /**
+   * Check for new listings only — scores jobs not yet in the cache and
+   * merges them into the existing results without wiping the display.
+   */
+  async function checkForNewListings() {
+    abortRef.current?.abort();
+    abortRef.current = new AbortController();
+
+    setStatus("checkingNew");
+    setNewJobsFound(0);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/crawlAnthropic?newOnly=true`,
+        { signal: abortRef.current.signal },
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.details || err.error || "Check failed");
+      }
+
+      const data: ICrawlResponse = await response.json();
+
+      if (data.jobs.length > 0) {
+        // Merge new jobs in — deduplicate by jobId, then re-sort by score
+        setAllJobs((prev) => {
+          const existingIds = new Set(prev.map((j) => j.jobId));
+          const brandNew = data.jobs.filter((j) => !existingIds.has(j.jobId));
+          const merged = [...prev, ...brandNew];
+          merged.sort((a, b) => b.score - a.score);
+          return merged;
+        });
+        setNewJobsFound(data.jobs.length);
+      }
+
+      setStatus("complete");
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      setError(err instanceof Error ? err.message : "Unknown error");
+      setStatus("error");
+    }
+  }
+
   useEffect(() => {
-    runScan();
+    loadCachedOrFull();
     return () => abortRef.current?.abort();
   }, []);
+
+  const isChecking = status === "checkingNew";
+  const isLoading = status === "loading";
 
   return (
     <PageWrapper>
@@ -120,7 +214,7 @@ export function MatchFinderAnthropicResults() {
             </Tooltip>
           </div>
 
-          {status === "complete" && summary && (
+          {(status === "complete" || isChecking) && summary && (
             <div className={styles.stats}>
               <Caption1>
                 <strong>{filteredJobs.length}</strong> shown /{" "}
@@ -152,18 +246,57 @@ export function MatchFinderAnthropicResults() {
               Batch-scored against your resume · Filter by match threshold
             </Body1>
           </div>
-          <Button
-            appearance="outline"
-            icon={<ArrowClockwise20Regular />}
-            onClick={() => runScan(true)}
-            disabled={status === "loading"}
+
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
           >
-            Re-scan (bypass cache)
-          </Button>
+            <Button
+              appearance="outline"
+              icon={isChecking ? <Spinner size="tiny" /> : <Search20Regular />}
+              onClick={checkForNewListings}
+              disabled={isLoading || isChecking}
+            >
+              {isChecking ? "Checking…" : "Check for new listings"}
+            </Button>
+            <Button
+              appearance="outline"
+              icon={<ArrowClockwise20Regular />}
+              onClick={() => runFullScan(true)}
+              disabled={isLoading || isChecking}
+            >
+              Re-score all
+            </Button>
+          </div>
         </div>
 
-        {/* Progress */}
-        {status === "loading" && (
+        {/* New jobs found banner */}
+        {newJobsFound > 0 && status === "complete" && (
+          <MessageBar intent="success" style={{ marginBottom: "16px" }}>
+            <MessageBarBody>
+              Found {newJobsFound} new listing{newJobsFound !== 1 ? "s" : ""}{" "}
+              and added them to the results.
+            </MessageBarBody>
+          </MessageBar>
+        )}
+
+        {/* No new listings banner */}
+        {newJobsFound === 0 &&
+          status === "complete" &&
+          summary &&
+          summary.cachedCount > 0 &&
+          allJobs.length > 0 &&
+          !isLoading &&
+          // Only show this after a "check for new" completed with nothing new
+          // We track this via a ref to avoid showing it on initial load
+          null}
+
+        {/* Full crawl progress */}
+        {isLoading && (
           <>
             <div className={styles.progressBar}>
               <div
@@ -191,12 +324,12 @@ export function MatchFinderAnthropicResults() {
         {status === "error" && (
           <MessageBar intent="error" style={{ marginBottom: "24px" }}>
             <MessageBarBody>
-              <strong>Scan failed:</strong> {error}
+              <strong>Failed:</strong> {error}
             </MessageBarBody>
           </MessageBar>
         )}
 
-        {/* Results grid */}
+        {/* Results grid — shown even while checkingNew so display doesn't disappear */}
         {filteredJobs.length > 0 && (
           <div className={styles.resultsGrid}>
             {filteredJobs.map((job) => (
