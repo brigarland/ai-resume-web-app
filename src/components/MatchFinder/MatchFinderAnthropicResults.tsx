@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Title1,
   Title3,
   Body1,
   Body2,
@@ -11,7 +10,6 @@ import {
   MessageBar,
   MessageBarBody,
   Tooltip,
-  tokens,
 } from "@fluentui/react-components";
 import {
   ArrowLeft24Regular,
@@ -19,6 +17,7 @@ import {
   Search20Regular,
   Info16Regular,
 } from "@fluentui/react-icons";
+import anthropicLogo from "@/assets/anthropic-logo.svg";
 import { PageWrapper, JobCard } from "@/components/shared";
 import { apiUrl } from "@/constants";
 import type { IScoredJob, ICrawlResponse } from "@/types";
@@ -205,12 +204,7 @@ export function MatchFinderAnthropicResults() {
               content="Drag to adjust the minimum match score. Only jobs at or above this threshold are shown."
               relationship="description"
             >
-              <Info16Regular
-                style={{
-                  color: tokens.colorNeutralForeground3,
-                  cursor: "help",
-                }}
-              />
+              <Info16Regular className={styles.infoIcon} />
             </Tooltip>
           </div>
 
@@ -221,7 +215,7 @@ export function MatchFinderAnthropicResults() {
                 <strong>{allJobs.length}</strong> scored /{" "}
                 <strong>{summary.totalFound}</strong> total
               </Caption1>
-              <Caption1 style={{ color: tokens.colorNeutralForeground3 }}>
+              <Caption1 className={styles.statsSecondary}>
                 {summary.cachedCount} from cache · {summary.skipped}{" "}
                 pre-filtered
               </Caption1>
@@ -233,28 +227,29 @@ export function MatchFinderAnthropicResults() {
       <main className={styles.resultsMain}>
         {/* Page header */}
         <div className={styles.resultsPageHeader}>
-          <div>
+          {/* Left: back button */}
+          <div className={styles.pageHeaderLeft}>
             <button
               className={styles.backButton}
               onClick={() => navigate("/matchfinder")}
             >
               <ArrowLeft24Regular />
-              Back to Match Finder
+              Back to Company Selection
             </button>
-            <Title1>Anthropic Jobs</Title1>
-            <Body1 className={styles.subtitle}>
-              Batch-scored against your resume · Filter by match threshold
-            </Body1>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
+          {/* Center: logo + title */}
+          <div className={styles.pageHeaderCenter}>
+            <img
+              src={anthropicLogo}
+              alt="Anthropic"
+              className={styles.pageHeaderLogo}
+            />
+            <span className={styles.pageHeaderTitle}>Anthropic Jobs</span>
+          </div>
+
+          {/* Right: action buttons */}
+          <div className={styles.pageHeaderRight}>
             <Button
               appearance="outline"
               icon={isChecking ? <Spinner size="tiny" /> : <Search20Regular />}
@@ -276,7 +271,7 @@ export function MatchFinderAnthropicResults() {
 
         {/* New jobs found banner */}
         {newJobsFound > 0 && status === "complete" && (
-          <MessageBar intent="success" style={{ marginBottom: "16px" }}>
+          <MessageBar intent="success" className={styles.successBanner}>
             <MessageBarBody>
               Found {newJobsFound} new listing{newJobsFound !== 1 ? "s" : ""}{" "}
               and added them to the results.
@@ -304,14 +299,7 @@ export function MatchFinderAnthropicResults() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                marginBottom: "32px",
-              }}
-            >
+            <div className={styles.crawlStatusRow}>
               <Spinner size="small" />
               <Body2>
                 Crawling Anthropic careers and scoring jobs against your resume…
@@ -322,7 +310,7 @@ export function MatchFinderAnthropicResults() {
         )}
 
         {status === "error" && (
-          <MessageBar intent="error" style={{ marginBottom: "24px" }}>
+          <MessageBar intent="error" className={styles.errorBanner}>
             <MessageBarBody>
               <strong>Failed:</strong> {error}
             </MessageBarBody>
@@ -340,7 +328,7 @@ export function MatchFinderAnthropicResults() {
 
         {status === "complete" && filteredJobs.length === 0 && (
           <div className={styles.emptyState}>
-            <Title3 style={{ marginBottom: "8px" }}>
+            <Title3 className={styles.emptyStateTitle}>
               No jobs above {threshold}%
             </Title3>
             <Body1>

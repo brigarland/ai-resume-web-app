@@ -29,7 +29,6 @@ export const useMatchFinderStyles = makeStyles({
     cursor: "pointer",
     fontSize: tokens.fontSizeBase300,
     fontWeight: tokens.fontWeightSemibold,
-    marginBottom: "8px",
     ":hover": { textDecoration: "underline" },
   },
 
@@ -202,19 +201,85 @@ export const useMatchFinderStyles = makeStyles({
     maxWidth: "1400px",
     margin: "0 auto",
     width: "100%",
-    ...shorthands.padding("32px"),
+    paddingTop: 0,
+    paddingRight: "32px",
+    paddingBottom: "32px",
+    paddingLeft: "32px",
     "@media (max-width: 768px)": {
-      ...shorthands.padding("24px", "16px"),
+      paddingRight: "16px",
+      paddingBottom: "24px",
+      paddingLeft: "16px",
     },
   },
 
   resultsPageHeader: {
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     flexWrap: "wrap",
     ...shorthands.gap("16px"),
     marginBottom: "24px",
+  },
+
+  pageHeaderLeft: {
+    flex: "1",
+    display: "flex",
+    alignItems: "center",
+  },
+
+  pageHeaderCenter: {
+    display: "flex",
+    alignItems: "center",
+    ...shorthands.gap("12px"),
+  },
+
+  pageHeaderLogo: {
+    height: "26px",
+    width: "auto",
+  },
+
+  pageHeaderTitle: {
+    fontSize: "17px",
+    fontWeight: "600",
+    letterSpacing: "0.18em",
+    color: "#1c1c1c",
+    textTransform: "uppercase",
+  },
+
+  pageHeaderRight: {
+    flex: "1",
+    display: "flex",
+    ...shorthands.gap("8px"),
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+
+  infoIcon: {
+    color: tokens.colorNeutralForeground3,
+    cursor: "help",
+  },
+
+  statsSecondary: {
+    color: tokens.colorNeutralForeground3,
+  },
+
+  successBanner: {
+    marginBottom: "16px",
+  },
+
+  errorBanner: {
+    marginBottom: "24px",
+  },
+
+  crawlStatusRow: {
+    display: "flex",
+    alignItems: "center",
+    ...shorthands.gap("12px"),
+    marginBottom: "32px",
+  },
+
+  emptyStateTitle: {
+    marginBottom: "8px",
   },
 
   resultsGrid: {
