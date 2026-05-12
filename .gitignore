@@ -33,3 +33,4 @@ dist-ssr
 
 # PDF assets
 *.pdf
+!public/brian-garland-resume.pdf
