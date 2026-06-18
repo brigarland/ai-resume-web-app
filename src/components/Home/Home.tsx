@@ -515,7 +515,7 @@ function Home() {
                 <Text className={styles.scoreLabel}>Match Score</Text>
                 <div className={styles.scoreSubtitleContainer}>
                   <Caption1 className={styles.scoreSubtitle}>
-                    Claude AI (Sonnet 4.5)'s arbitrary opinion
+                    Claude AI (Sonnet 4.6)'s arbitrary opinion
                   </Caption1>
                   <Tooltip
                     content={{

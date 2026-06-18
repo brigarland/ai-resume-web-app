@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
   );
 
   if (req.method === "OPTIONS") {
@@ -76,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         console.log("Description length:", scrapedData.description.length);
         console.log(
           "Description preview:",
-          scrapedData.description.substring(0, 500)
+          scrapedData.description.substring(0, 500),
         );
         console.log("===================");
       } catch (scrapeError) {
@@ -86,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const errorMessage =
           scrapeError instanceof Error ? scrapeError.message : "Unknown error";
         const isInvalidJobDescription = errorMessage.includes(
-          "INVALID_JOB_DESCRIPTION"
+          "INVALID_JOB_DESCRIPTION",
         );
         const isBotDetected = errorMessage.includes("BOT_DETECTED");
 
@@ -156,7 +156,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
 
     // Call Claude API
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-6",
       max_tokens: 2000,
       system: systemPrompt,
       messages: [
@@ -185,7 +185,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
       try {
         // Method 2: Extract from markdown code block
         const codeBlockMatch = responseText.match(
-          /```(?:json)?\s*([\s\S]*?)```/
+          /```(?:json)?\s*([\s\S]*?)```/,
         );
         if (codeBlockMatch) {
           analysis = JSON.parse(codeBlockMatch[1]);
@@ -205,8 +205,8 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
         throw new Error(
           `Failed to parse AI response. Response: ${responseText.substring(
             0,
-            200
-          )}...`
+            200,
+          )}...`,
         );
       }
     }
@@ -218,24 +218,24 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
       "matchScore:",
       analysis.matchScore,
       "Type:",
-      typeof analysis.matchScore
+      typeof analysis.matchScore,
     );
     console.log(
       "strengths:",
       analysis.strengths,
       "Is Array:",
-      Array.isArray(analysis.strengths)
+      Array.isArray(analysis.strengths),
     );
     console.log(
       "gaps:",
       analysis.gaps,
       "Is Array:",
-      Array.isArray(analysis.gaps)
+      Array.isArray(analysis.gaps),
     );
     console.log("relevantStories:", analysis.relevantStories);
     console.log(
       "recommendation:",
-      analysis.recommendation ? "Present" : "MISSING"
+      analysis.recommendation ? "Present" : "MISSING",
     );
     console.log("All keys:", Object.keys(analysis));
     console.log("======================");
@@ -243,17 +243,17 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
     // Validate the response has required fields
     if (typeof analysis.matchScore !== "number") {
       throw new Error(
-        `matchScore is missing or not a number. Got: ${typeof analysis.matchScore}`
+        `matchScore is missing or not a number. Got: ${typeof analysis.matchScore}`,
       );
     }
     if (!Array.isArray(analysis.strengths)) {
       throw new Error(
-        `strengths is missing or not an array. Got: ${typeof analysis.strengths}`
+        `strengths is missing or not an array. Got: ${typeof analysis.strengths}`,
       );
     }
     if (!analysis.recommendation) {
       throw new Error(
-        `recommendation is missing. Got: ${typeof analysis.recommendation}`
+        `recommendation is missing. Got: ${typeof analysis.recommendation}`,
       );
     }
 
@@ -268,7 +268,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
     ];
     const recommendationLower = analysis.recommendation.toLowerCase();
     const seemsInvalid = invalidJobDescriptionIndicators.some((indicator) =>
-      recommendationLower.includes(indicator)
+      recommendationLower.includes(indicator),
     );
 
     if (seemsInvalid || analysis.matchScore < 10) {
@@ -283,7 +283,7 @@ Analyze this candidate's fit and respond with ONLY the JSON object, no other tex
     // Enrich with full story objects
     const relevantStoryIds = analysis.relevantStories || [];
     const enrichedStories = stories.filter((story) =>
-      relevantStoryIds.includes(story.id)
+      relevantStoryIds.includes(story.id),
     );
 
     const response: IJobAnalysisResponse = {

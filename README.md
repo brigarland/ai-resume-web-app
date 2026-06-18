@@ -8,7 +8,7 @@ An AI-powered web application that analyzes job fit by matching your resume and 
 
 This portfolio project demonstrates:
 
-- **AI Integration**: Anthropic Claude API with Sonnet 4.5 for intelligent analysis
+- **AI Integration**: Anthropic Claude API with Sonnet 4.6 for intelligent analysis
 - **Modern Web Stack**: React + TypeScript + Vite for fast, type-safe development
 - **Serverless Architecture**: Vercel Functions for scalable, cost-effective API calls
 - **Clean Code**: Fluent UI makeStyles for maintainable, type-safe styling
@@ -35,7 +35,7 @@ This portfolio project demonstrates:
 ### Backend
 
 - **Vercel Serverless Functions** (Node.js runtime)
-- **Anthropic Claude API** (Sonnet 4.5)
+- **Anthropic Claude API** (Sonnet 4.6)
 - **TypeScript** for type safety across the stack
 
 ### Deployment
@@ -130,13 +130,11 @@ Edit this file to add your information:
    ```
 
 2. **Connect to Vercel**
-
    - Push code to GitHub
    - Import project at [vercel.com](https://vercel.com)
    - Add `ANTHROPIC_API_KEY` to environment variables
 
 3. **Configure custom domain**
-
    - In Vercel dashboard: Settings → Domains
    - Add your domain (e.g., brigarland.com)
    - Update DNS records in Namecheap
