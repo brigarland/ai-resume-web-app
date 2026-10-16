@@ -92,6 +92,59 @@ export const stories: IStory[] = [
     ],
     categories: ["personal-growth", "problem-solving", "resilience"],
   },
+  {
+    id: "story-005",
+    title: "Firefly Launch: Blank Canvas to Production in Two Days",
+    icon: "rocket",
+    context:
+      "Launched Firefly in the Dark from a blank canvas to a production website in two days using an iterative AI-assisted workflow. Started by asking AI tools for rough first drafts, then critiqued exactly what was wrong with each one and revised, again and again, until the work became a brand guideline, then a style guide, then a working Next.js and React codebase on Vercel with a SQL database. The AI produced volume; the judgment about what was good, what was off-brand, and what was production-ready stayed human. The site has since grown to include a Resend newsletter pipeline and an RSS feed that distributes the podcast to every major platform.",
+    skills: [
+      "AI-assisted development",
+      "rapid prototyping",
+      "Next.js",
+      "React",
+      "brand and style guide development",
+      "design systems",
+      "full-stack ownership",
+      "critical evaluation of AI output",
+    ],
+    outcomes: [
+      "Went from blank canvas to production website in two days",
+      "Produced brand guidelines, a style guide, and a full codebase through iterative critique-and-revise cycles with AI",
+      "Own the full stack in production: Next.js, React, Vercel, SQL database, Resend newsletter, podcast RSS feed",
+      "Demonstrates directing AI tools toward a quality bar rather than accepting first output",
+    ],
+    categories: ["technical", "ai", "prototyping", "leadership"],
+  },
+  {
+    id: "story-006",
+    title: "Building a Tech Community and Media Platform",
+    icon: "users",
+    context:
+      "Founded Firefly in the Dark, a community, events, and content organization built around seeing technology clearly, as it is rather than as we wish it to be. Organize and host weekly tech networking events across the greater Seattle area, growing a local community with hundreds of members. Write a weekly column and long-form essays on technology, culture, and the industry. Host an interview podcast with long-time practitioners, and produce and edit all Firefly media, including long-form YouTube video, podcast audio, and short-form social clips. Every part of it depends on the same skill used in engineering leadership: understanding the audience and making complex ideas land.",
+    skills: [
+      "community building",
+      "event organization",
+      "public speaking",
+      "podcast hosting",
+      "technical writing",
+      "video and audio editing",
+      "content strategy",
+      "venue and partner relationships",
+    ],
+    outcomes: [
+      "Grew a local tech community with hundreds of members through weekly in-person events",
+      "Publish a weekly column plus long-form essays",
+      "Host and produce an interview podcast and all supporting video and social content",
+      "Built venue partnerships across multiple Seattle-area locations",
+    ],
+    categories: [
+      "communication",
+      "leadership",
+      "content-creation",
+      "community",
+    ],
+  },
 ];
 
 /**
@@ -100,9 +153,9 @@ export const stories: IStory[] = [
 export const resumeData: IResumeData = {
   fullText: `
 BRIAN GARLAND
-AI Prototype Technologist
+Front End Engineer - Prototyping & AI
 
-Innovative technologist specializing in rapid AI prototyping and user-centered design. Expert in leveraging GenAI and modern web frameworks to transform concepts into production-ready applications. Proven track record leading development teams at Fortune 500 clients, with deep expertise in React and TypeScript. Passionate about bridging the gap between cutting-edge AI capabilities and intuitive user experiences.
+Front end engineer with 18 years building for the web. Expert in React and TypeScript, with a focus on turning new concepts into production applications - AI tools, data visualization, and rapid prototypes. Writer, podcast host, and founder of Seattle-area tech meetups. Fluent with executives, product managers, and developers, translating between all three.
 
 CONTACT
 Email: bri.garland@gmail.com
@@ -110,47 +163,56 @@ AI Portfolio App: brigarland.com
 Location: Seattle, WA
 
 TECH EXPERTISE
-â€¢ React
-â€¢ TypeScript
-â€¢ Fluent UI
-â€¢ GenAI
-â€¢ JavaScript
-â€¢ UX Design
-â€¢ Azure
-â€¢ Python
-â€¢ Agile (Scrum & Kanban)
+- React
+- TypeScript
+- Next.js
+- JavaScript
+- HTML & CSS
+- Fluent UI
+- GenAI / LLM Integration
+- Design Systems
+- Azure
 
 EMPLOYMENT HISTORY
+
+Founder & President | January 2026 - Present
+Firefly in the Dark | fireflyinthedark.com
+
+- Launched Firefly from blank canvas to production in two days - brand, style guide, and website - using an iterative AI-assisted workflow
+- Maintain and extend fireflyinthedark.com in Next.js and React on Vercel, with a SQL database, a Resend newsletter pipeline, and an RSS feed that distributes the podcast to every major platform
+- Produce and edit all Firefly media - long-form YouTube video, podcast audio, and short-form social clips
+- Write a weekly column and long-form essays on technology, culture, and the industry; host an interview podcast with long-time practitioners
+- Organize and host weekly tech networking events across the greater Seattle area, growing a local community with hundreds of members
 
 UX Software Engineer, Lead | September 2018 - January 2026
 Blueprint Technologies
 
-- Lead development teams building cutting edge visualization and GenAI applications for Fortune 500 clients, managing full project lifecycle from ideation through production release
-- Architect and implement customer-facing UI/UX solutions using React, Fluent UI, and C# APIs integrated with Databricks and Azure services
-- Leverage AI acceleration tools and GenAI capabilities to rapidly prototype and deploy production-ready applications, reducing development cycles while maintaining high quality standards
-- Drive innovation by conducting user research, collecting feedback, and iterating on experimental concepts to deliver maximum business impact
-- Mentor development teams and provide technical guidance throughout the development cycle, improving team cohesion and productivity
-- Serve as SME providing strategic recommendations when technical constraints or deadlines require solution pivots
-- Create software training videos and documentation to facilitate user onboarding and product adoption
+- Led front end development on enterprise AI and data visualization products for Fortune 500 clients, from first prototype to production release
+- Built React, TypeScript, and Fluent UI interfaces on C# and FastAPI services backed by Databricks, Neo4j, and Azure
+- Prototyped AI agent and graph-based tools for supply chain automation, then took the ones that worked to production
+- Led and mentored development teams; set front end standards, ran code review, and wrote onboarding docs for new developers
+- Partnered with UX designers and business stakeholders to turn research findings into shipped UI changes
+- Served as SME providing strategic recommendations when technical constraints or deadlines required solution pivots
+- Created software training videos and documentation to support user onboarding and product adoption
 
 UX Engineer | January 2018 - August 2018
 Microsoft (Contract through Aquent)
 
-- Contributed features and bug fixes to Office UI Fabric React (now Fluent UI), an open-source TypeScript framework with 180K+ weekly downloads
-- Organized triage of 500+ GitHub issues to improve project maintainability and community engagement
-- Implemented email pipeline in C# to enhance product quality control
+- Shipped features and fixes to Office UI Fabric React (now Fluent UI), an open-source TypeScript component library with 180K+ weekly downloads
+- Triaged 500+ GitHub issues and brought community feedback to the product team
+- Implemented an email pipeline in C# to improve product quality control
 
 Senior Web Application Developer | January 2017 - January 2018
 Champagne Solutions
 
-- Managed full-stack web application projects from specification to deployment for multiple clients
-- Developed custom CRUD admin interfaces using Laravel framework and modern PHP practices
+- Built full-stack web apps for multiple clients; led front end work and mentored a junior developer
+- Developed custom CRUD admin interfaces using Laravel and modern PHP practices
 
 Lead Front-End Web Developer | July 2013 - January 2017
 efelle creative
 
-- Directed construction of 200+ client websites, leading a front-end development team with 20 primary ownership projects
-- Mentored developers to establish best practices as corporate standards, improving code quality and team efficiency
+- Led front end development on 200+ client websites, with primary ownership of 20
+- Wrote the team's front end coding standards and onboarding process
 - Evaluated and implemented automation strategies with executive leadership, balancing security and performance
 
 Web Developer / Founder | June 2012 - July 2013
@@ -166,13 +228,14 @@ Early Career Experience | 2008 - 2013
 - Tocrok Productions - Associate Producer (2009): Digital and interactive production projects
 
 PERSONAL SKILLS
-â€¢ Technical Leadership
-â€¢ Rapid Prototyping
-â€¢ Cross-functional Collaboration
-â€¢ Mentorship & Teaching
-â€¢ User Research & Feedback Integration
-â€¢ Strategic Problem Solving
-â€¢ Innovation & Experimentation
+- Technical Writing
+- Public Speaking & Hosting
+- Rapid Prototyping
+- Code Review & Mentorship
+- Documentation & Onboarding
+- Cross-functional Collaboration
+- Community Building
+- Agile (Scrum & Kanban)
 
 EDUCATION
 
@@ -190,19 +253,24 @@ Blueprint Technologies Core Value Award (2019)
     { value: "React", rating: 5 },
     { value: "TypeScript", rating: 5 },
     { value: "JavaScript", rating: 5 },
+    { value: "Next.js", rating: 4 },
     { value: "HTML5/CSS3", rating: 5 },
     { value: "Sass/SCSS", rating: 5 },
     { value: "RESTful APIs", rating: 4 },
     { value: "SQL", rating: 2 },
     { value: "Azure", rating: 3 },
+    { value: "Vercel", rating: 4 },
     { value: "Python", rating: 3 },
+    { value: "FastAPI", rating: 3 },
+    { value: "Neo4j", rating: 3 },
     { value: "C#", rating: 1 },
     { value: "C++", rating: 2 },
     { value: "Bash/Shell", rating: 4 },
     { value: "Fluent UI", rating: 5 },
     { value: "Fluent UI React", rating: 5 },
+    { value: "Design Systems", rating: 4 },
     { value: "Agile (Scrum & Kanban)", rating: 4 },
-    { value: "User Experience Design", rating: 5 },
+    { value: "UX Engineering", rating: 5 },
     { value: "Project Management", rating: 4 },
     { value: "SEO", rating: 4 },
     { value: "E-Commerce", rating: 4 },
@@ -216,6 +284,7 @@ Blueprint Technologies Core Value Award (2019)
     { value: "GenAI", rating: 5 },
   ],
   experience: [
+    "Firefly in the Dark - Founder & President (Jan 2026 - Present)",
     "Blueprint Technologies - UX Software Engineer, Lead (Sept 2018 - Jan 2026)",
     "Microsoft (Contract through Aquent) - UX Engineer (Jan 2018 - Aug 2018)",
     "Champagne Solutions - Senior Web Application Developer (Jan 2017 - Jan 2018)",
