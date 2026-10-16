@@ -32,4 +32,4 @@ dist-ssr
 .vercel
 
 # PDF assets
-# *.pdf
+*.pdf
